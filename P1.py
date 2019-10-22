@@ -3,6 +3,8 @@
 # "All modules should normally have docstrings"
 # but is it necessary?
 
+# Don't forget to close the file
+
 import os
 import sys
 
@@ -13,12 +15,26 @@ def ParseSeqFile(path, filename):
     filename:   filename (including extension) of the sequence file
     """
 
-    seq_file_content = ReadSeqFile(path, filename)
+    seq_file = ReadSeqFile(path, filename)
 
-    if ValidSeqFile(seq_file_content):
-        return(seq_file_content)
-    else:
-        print("malformed input")
+    seq_pairs = []
+
+    for line in seq_file:
+        if line[0] == ">":
+            label = line[1:].split()[0]
+
+            #rewrite nicer
+            nucleotide_raw = line[1:].split(maxsplit = 1)[1]
+            nucleotide = "".join(nucleotide_raw.split())
+
+            seq_pairs.append((label, nucleotide))
+        else:
+            #doesn't perform properly yet prints as soon as there's one line
+            #not starting with a >?!
+            print("malformed input")
+
+    seq_file.close()
+    return seq_pairs
 
 
 def ReadSeqFile(path, filename):
@@ -31,25 +47,7 @@ def ReadSeqFile(path, filename):
     except:
         sys.exit("Combination of path and filename can't be opened.")
 
-    seq_file_content = seq_file.read()
-    seq_file.close()
-    return(seq_file_content)
-
-
-def ValidSeqFile(seq_file_content):
-    """Go through sequence file contents and check for validity."""
-
-    valid_lines = 0
-
-    for line in seq_file_content:
-        if line[0] == ">":
-            valid_lines += 1
-
-    if valid_lines > 0:
-        return True
-    else:
-        return False
-
+    return(seq_file)
 
 
 
@@ -57,6 +55,3 @@ def ValidSeqFile(seq_file_content):
 path = "/Users/stefan_schmutz/Documents/GitHub/pad-project-2019/input"
 filename = "sequeces_example_1.txt"
 print(ParseSeqFile(path, filename))
-
-# wrong or missing path
-print(ParseSeqFile("wrong path", filename))

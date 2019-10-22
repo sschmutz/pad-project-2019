@@ -24,6 +24,7 @@ def ParseSeqFile(path, filename):
             label = line[1:].split()[0]
 
             #rewrite nicer
+            #doesn't work if there's only a label but no other element (index out of range)
             nucleotide_raw = line[1:].split(maxsplit = 1)[1]
             nucleotide = "".join(nucleotide_raw.split())
 

@@ -4,6 +4,7 @@
 # but is it necessary?
 
 import os
+import sys
 
 def ParseSeqFile(path, filename):
     """Parse a sequence file and return a list of pairs (label, sequence).
@@ -28,7 +29,7 @@ def ReadSeqFile(path, filename):
     try:
         seq_file = open(full_filename, "r")
     except:
-        print("Combination of path and filename can't be opened.")
+        sys.exit("Combination of path and filename can't be opened.")
 
     seq_file_content = seq_file.read()
     seq_file.close()
@@ -58,4 +59,4 @@ filename = "sequeces_example_1.txt"
 print(ParseSeqFile(path, filename))
 
 # wrong or missing path
-print(ParseSeqFile(filename))
+print(ParseSeqFile("wrong path", filename))

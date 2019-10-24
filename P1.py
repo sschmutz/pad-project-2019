@@ -24,8 +24,8 @@ def ParseSeqFile(path, filename):
     if seq_pairs:
         return seq_pairs
 
-    # only returns this if all lines in sequence file are invalid
-    return "malformed input"
+    # only raises exception if all lines in sequence file are invalid
+    raise Exception("malformed input")
 
 
 
@@ -74,5 +74,5 @@ def ValidatedSeq(line):
 
 
 PATH = "/Users/stefan_schmutz/Documents/GitHub/pad-project-2019/input"
-FILENAME = "sequeces_example_1.txt"
+FILENAME = "sequeces_example_3.txt"
 print(ParseSeqFile(PATH, FILENAME))

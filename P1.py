@@ -30,9 +30,8 @@ def ParseSeqFile(path, filename):
 def OpenSeqFile(path, filename):
     """Opens a sequence file if possible and returns it."""
 
-    full_filename = os.path.join(path, filename)
-
     try:
+        full_filename = os.path.join(path, filename)
         seq_file = open(full_filename, "r")
     except:
         sys.exit("Combination of path and filename can't be opened.")

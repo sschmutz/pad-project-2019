@@ -1,12 +1,7 @@
-"""This module contains code to parse a sequence file"""
-# according PEP 257 (see: https://www.python.org/dev/peps/pep-0257/)
-# "All modules should normally have docstrings"
-# but is it necessary?
-
-# Don't forget to close the file
-
 import os
 import sys
+
+
 
 def ParseSeqFile(path, filename):
     """Parse a sequence file and return a list of pairs (label, sequence).
@@ -15,31 +10,25 @@ def ParseSeqFile(path, filename):
     filename:   filename (including extension) of the sequence file
     """
 
-    seq_file = ReadSeqFile(path, filename)
-
+    seq_file = OpenSeqFile(path, filename)
     seq_pairs = []
 
     for line in seq_file:
-        if line[0] == ">":
-            label = line[1:].split()[0]
-
-            #rewrite nicer
-            #doesn't work if there's only a label but no other element (index out of range)
-            nucleotide_raw = line[1:].split(maxsplit = 1)[1]
-            nucleotide = "".join(nucleotide_raw.split())
-
-            seq_pairs.append((label, nucleotide))
-        else:
-            #doesn't perform properly yet prints as soon as there's one line
-            #not starting with a >?!
-            print("malformed input")
-
+        if ValidatedSeq(line) != None:
+            seq_pairs.append(ValidatedSeq(line))
+        
     seq_file.close()
-    return seq_pairs
+    
+    if len(seq_pairs) != 0:
+        return seq_pairs
+    else:
+        # only returns this if all lines in sequence file are invalid
+        return "malformed input"  
+        
+    
 
-
-def ReadSeqFile(path, filename):
-    """Read a sequence file and return it's contents."""
+def OpenSeqFile(path, filename):
+    """Opens a sequence file if possible and returns it."""
 
     full_filename = os.path.join(path, filename)
 
@@ -49,7 +38,37 @@ def ReadSeqFile(path, filename):
         sys.exit("Combination of path and filename can't be opened.")
 
     return(seq_file)
+    
+    
+    
+def ValidatedSeq(line):
+    """Read line from SeqFile and return matching label and sequence in a tuple.
+    
+    Checks format of line from sequence file, stips all whitespace characters
+    and only returns the label and nucleotide sequence if formatted properly:
+        - Line starts with a ">" character
+        - First item is present (label)
+        - Second item is present (nucleotide sequence consisting of A, T, G or C)
+    """
 
+    if line[0] == ">":
+        
+        try:
+            label = line[1:].split()[0]
+            
+            nucleotides_raw = line[1:].split(maxsplit = 1)[1]
+            nucleotides = "".join(nucleotides_raw.split())
+            #TODO are the next scripts case sensitive?
+        except:
+            return None
+    
+    valid_nucleotides = "ATGC"
+        
+    for nucleotide in nucleotides:
+        if nucleotide not in valid_nucleotides:
+            return None
+
+    return (label, nucleotides)
 
 
 

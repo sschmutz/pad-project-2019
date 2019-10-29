@@ -33,6 +33,7 @@ def ParseSeqFile(path, filename):
 def OpenSeqFile(path, filename):
     """Opens a sequence file if possible and returns it."""
 
+    # TODO: is this try/except really necessary?
     try:
         full_filename = os.path.join(path, filename)
         seq_file = open(full_filename, "r")
@@ -59,9 +60,8 @@ def ValidSeq(line):
             label = line[1:].split()[0]
 
             # TODO: is there a nicer way to do this?
-            nucleotides_raw = line[1:].split(maxsplit=1)[1]
+            nucleotides_raw = line[1:].split(maxsplit=1)[1].upper()
             nucleotides = "".join(nucleotides_raw.split())
-            # TODO: are the next scripts case sensitive?
         except:
             return None
 

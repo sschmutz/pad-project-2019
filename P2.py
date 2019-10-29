@@ -1,4 +1,4 @@
-"""This module..."""
+"""This module uses dynamic programming to align nucleotide sequences"""
 
 def AlignByDP(sequences):
     """Reads list of sequence pairs (label, sequence) and returns a dictionary
@@ -10,20 +10,48 @@ def AlignByDP(sequences):
     return "finished"
 
 
+
 def ValidSequences(sequences):
     """Reads list of sequence pairs (label, sequence) and returns False if not valid.
 
-    sequences should be of type list with length > 0,
-    contain tuples of length 2 (both of type string)
+    sequences should be of type list,
+    contain tuples of length 2 of which both are of type string
 
     while the first element represents the label without any whitespace character
-    the second element should be a nucleotide sequence only containing A, T, G, C
+    the second element should be a nucleotide sequence only containing
+    uppercase A, T, G, C
     """
+    
+    valid_nucleotides = "ATGC"
 
-    # TODO: write function
+    
+    if type(sequences) is not list:
+        return False
+        
+    for entry in sequences:
+        if type(entry) is not tuple:
+            return False
+        elif len(entry) != 2:
+            return False
+        elif len(entry[0].split()) > 1:
+            return False
+
+        for element in entry:
+            if type(element) is not str:
+                return False
+        
+        for nucleotides in entry[1]:
+            for nucleotide in nucleotides:
+                if nucleotide not in valid_nucleotides:
+                    return False
 
     return True
 
+# scoring matrix
+
+# traceback
+
+# alignment
 
 
 
@@ -32,13 +60,22 @@ def ValidSequences(sequences):
 
 
 
+P1_output = [("Mouse", "ACCAAACATCCAAACACCAACCCCAGCCCTTACGCAATCATACAAAGAATATT"),
+             ("Bovine", "ACCAAACCTGTCCCCATCTAACACCAACCCACATATACAAGCTAAACCAAAAATACC"),
+             ("Gibbon", "ACTATACCCACCCAACTCGACCTACACCAATCCCCACATAGCACACAGACCAACAACCTC"),
+             ("Orangutan", "ACCCCACCCGTCTACACCAGCCAACACCAACCCCCACCTACTATACCAACCAATAACCTC"),
+             ("Gorilla", "ACCCCATTTATCCATAAAAACCAACACCAACCCCCATCTAACACACAAACTAATGACCCC"),
+             ("Chimp", "ACCCCATCCACCCATACAAACCAACATTACCCATCCAATATACAAACACCTC"),
+             ("Human", "ACCCCACTCACCCATACAAACCAACACCACTCTCCACCTAATATACAAATACCTC")]
 
-P1_output = [('Mouse', 'ACCAAACATCCAAACACCAACCCCAGCCCTTACGCAATCATACAAAGAATATT'),
-             ('Bovine', 'ACCAAACCTGTCCCCATCTAACACCAACCCACATATACAAGCTAAACCAAAAATACC'),
-             ('Gibbon', 'ACTATACCCACCCAACTCGACCTACACCAATCCCCACATAGCACACAGACCAACAACCTC'),
-             ('Orangutan', 'ACCCCACCCGTCTACACCAGCCAACACCAACCCCCACCTACTATACCAACCAATAACCTC'),
-             ('Gorilla', 'ACCCCATTTATCCATAAAAACCAACACCAACCCCCATCTAACACACAAACTAATGACCCC'),
-             ('Chimp', 'ACCCCATCCACCCATACAAACCAACATTACCCATCCAATATACAAACACCTC'),
-             ('Human', 'ACCCCACTCACCCATACAAACCAACACCACTCTCCACCTAATATACAAATACCTC')]
+P1_output_false1 = ("Mouse", "ACCAAACATCCAAACACCAACCCCAGCCCTTACGCAATCATACAAAGAATATT")
+P1_output_false2 = ["Mouse", "ACCAAACATCCAAACACCAACCCCAGCCCTTACGCAATCATACAAAGAATATT"]
+P1_output_false3 = [("Mouse", "ACCAAACATCCAAACACCAACCCCAGCCCTTACGCAATCATACAAAGAATATT", "t")]
+P1_output_false4 = [(1, "ACCAAACATCCAAACACCAACCCCAGCCCTTACGCAATCATACAAAGAATATT")]
+P1_output_false5 = [("Mouse 1", "ACCAAACATCCAAACACCAACCCCAGCCCTTACGCAATCATACAAAGAATATT")]
+P1_output_false6 = [("Mouse", "ACCAAACATCCAAACACCAACCCCAGCCCTTACGCAATCATACAAAGAATATT"),
+                    ("Bovine", "AcCAAACCTGTCCCCATCTAACACCAACCCACATATACAAGCTAAACCAAAAATACC")]
 
-AlignByDP(P1_output)
+
+
+print(AlignByDP(P1_output))

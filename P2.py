@@ -7,7 +7,21 @@ def AlignByDP(sequences):
     if not ValidSequences(sequences):
         raise Exception("malformed input")
 
-    return "finished"
+    alignments = dict()
+
+    # Compare each pair of the input sequences with eachother
+    for entry1 in range(0, len(sequences)-1):
+        for entry2 in range(entry1+1, len(sequences)):
+
+            seq1 = P1_output[entry1][1]
+            seq2 = P1_output[entry2][1]
+
+            # run alignment function which should return two strings (sequences)
+            # aligned to each eachother
+
+            alignments[(entry1, entry2)] = AlignSequences(seq1, seq2)
+
+    return alignments
 
 
 
@@ -21,13 +35,13 @@ def ValidSequences(sequences):
     the second element should be a nucleotide sequence only containing
     uppercase A, T, G, C
     """
-    
+
     valid_nucleotides = "ATGC"
 
-    
+
     if type(sequences) is not list:
         return False
-        
+
     for entry in sequences:
         if type(entry) is not tuple:
             return False
@@ -39,7 +53,7 @@ def ValidSequences(sequences):
         for element in entry:
             if type(element) is not str:
                 return False
-        
+
         for nucleotides in entry[1]:
             for nucleotide in nucleotides:
                 if nucleotide not in valid_nucleotides:
@@ -47,11 +61,7 @@ def ValidSequences(sequences):
 
     return True
 
-# scoring matrix
 
-# traceback
-
-# alignment
 
 
 

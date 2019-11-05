@@ -1,7 +1,6 @@
 """This module reads labels and sequences from a text file."""
 
 import os
-import sys
 
 
 

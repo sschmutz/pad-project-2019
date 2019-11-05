@@ -17,7 +17,6 @@ def ParseSeqFile(path, filename):
 
     for line in seq_file:
         if ValidSeq(line):
-            # TODO: is it very bad to call the same function with the same argument twice?
             seq_pairs.append(ValidSeq(line))
 
     seq_file.close()
@@ -33,12 +32,12 @@ def ParseSeqFile(path, filename):
 def OpenSeqFile(path, filename):
     """Opens a sequence file if possible and returns it."""
 
-    # TODO: is this try/except really necessary?
     try:
         full_filename = os.path.join(path, filename)
         seq_file = open(full_filename, "r")
-    except:
-        sys.exit("Combination of path and filename can't be opened.")
+    except FileNotFoundError:
+        print("Combination of path and filename can't be opened.")
+        raise
 
     return seq_file
 
@@ -52,19 +51,24 @@ def ValidSeq(line):
         - Line starts with a ">" character
         - First item is present (label)
         - Second item is present (nucleotide sequence consisting of A, T, G or C)
+
+    Returns "None" if the line isn't valid.
     """
 
     if line[0] == ">":
 
         try:
+            # Per definition, the first element after the ">" sign is the label
             label = line[1:].split()[0]
 
-            # TODO: is there a nicer way to do this?
+            # Extract everything after the label and return upper case letters
             nucleotides_raw = line[1:].split(maxsplit=1)[1].upper()
+            # Remove all whitespace characters from the nucleotide sequence
             nucleotides = "".join(nucleotides_raw.split())
-        except:
+        except ValueError:
             return None
 
+        # We only deal with upper case nucleotide letters
         valid_nucleotides = "ATGC"
 
         for nucleotide in nucleotides:

@@ -41,7 +41,7 @@ for row in range(rows-1, -1, -1):
         #     last_position.append((row, column-1))
         #
         #     seq1_aligned.append("-")
-        #     seq2_aligned.append(seq2[row-1])
+        #     seq2_aligned.append(seq2[column-1])
         #     aligned_score.append(indel)
 
 seq1_aligned.reverse()

@@ -68,16 +68,21 @@ def AlignSequences(seq1, seq2):
     """Takes two strings (nucleotide sequences) and returns aligned strings
     in a tuple"""
 
+    # using the scoring system as descibed in the Nature Primer publication
+    # "What is dynamic programming" by Sean R Eddy
     match = 5
     mismatch = -2
     indel = -6
 
-    # set up scoring matrix
+    # set up of scoring matrix
     matrix = [[None for column in range(len(seq2)+1)] for row in range(len(seq1)+1)]
 
     rows = len(matrix)
     columns = len(matrix[0])
 
+    # the possible paths during traceback will be saved in a list,
+    # each path is a tuple containing two tuples
+    # with two elements (row, column) each
     possible_paths = []
 
     # starting value of the matrix is defined as 0
@@ -86,11 +91,11 @@ def AlignSequences(seq1, seq2):
     # populating first i and j residues of seq1 and seq2
     for row in range(1, rows):
         matrix[row][0] = matrix[row-1][0] + indel
-        possible_paths.append(((row-1, 0), (row, 0)))
+        possible_paths.append(((row, 0), (row-1, 0)))
 
     for column in range(1, columns):
         matrix[0][column] = matrix[0][column-1] + indel
-        possible_paths.append(((0, column-1), (0, column)))
+        possible_paths.append(((0, column), (0, column-1)))
 
     # populating rest of the matrix
     for row in range(1, rows):
@@ -104,9 +109,9 @@ def AlignSequences(seq1, seq2):
             above = matrix[row-1][column] + indel
             left = matrix[row][column-1] + indel
 
-            scores = {((row-1, column-1), (row, column)) : upper_left, \
-                      ((row-1, column), (row, column)) : above, \
-                      ((row, column-1), (row, column)) : left}
+            scores = {((row, column), (row-1, column-1)) : upper_left, \
+                      ((row, column), (row-1, column)) : above, \
+                      ((row, column), (row, column-1)) : left}
 
             max_score = max(scores.values())
 
@@ -121,10 +126,12 @@ def AlignSequences(seq1, seq2):
     seq1_aligned = []
     seq2_aligned = []
 
+
+
     # following part could probably be sped up with a while loop
     for row in range(rows-1, -1, -1):
         for column in range(columns-1, -1, -1):
-            if ((row-1, column-1), (row, column)) in possible_paths and (row, column) == (last_position["row"], last_position["column"]):
+            if ((row, column), (row-1, column-1)) in possible_paths and (row, column) == (last_position["row"], last_position["column"]):
                 # it's a match or mismatch, move to upper left
                 last_position["row"] -= 1
                 last_position["column"] -= 1
@@ -132,14 +139,14 @@ def AlignSequences(seq1, seq2):
                 seq1_aligned.insert(0, seq1[row-1])
                 seq2_aligned.insert(0, seq2[column-1])
 
-            elif ((row-1, column), (row, column)) in possible_paths and (row, column) == (last_position["row"], last_position["column"]):
+            elif ((row, column), (row-1, column)) in possible_paths and (row, column) == (last_position["row"], last_position["column"]):
                 # it's an indel, move to above
                 last_position["row"] -= 1
 
                 seq1_aligned.insert(0, seq1[row-1])
                 seq2_aligned.insert(0, "-")
 
-            elif ((row, column-1), (row, column)) in possible_paths and (row, column) == (last_position["row"], last_position["column"]):
+            elif ((row, column), (row, column-1)) in possible_paths and (row, column) == (last_position["row"], last_position["column"]):
                 # it's an indel, move to left
                 last_position["column"] -= 1
 

@@ -128,26 +128,22 @@ def AlignSequences(seq1, seq2):
                 # it's a match or mismatch
                 last_position.append((row-1, column-1))
 
-                seq1_aligned.append(seq1[row-1])
-                seq2_aligned.append(seq2[column-1])
+                seq1_aligned.insert(0, seq1[row-1])
+                seq2_aligned.insert(0, seq2[column-1])
 
             elif ((row-1, column), (row, column)) in possible_paths and (row, column) == last_position[-1]:
                 # it's an indel
                 last_position.append((row-1, column))
 
-                seq1_aligned.append(seq1[row-1])
-                seq2_aligned.append("-")
+                seq1_aligned.insert(0, seq1[row-1])
+                seq2_aligned.insert(0, "-")
 
             elif ((row, column-1), (row, column)) in possible_paths and (row, column) == last_position[-1]:
                 # it's an indel
                 last_position.append((row, column-1))
 
-                seq1_aligned.append("-")
-                seq2_aligned.append(seq2[column-1])
-
-    # put alignment in correct order
-    seq1_aligned.reverse()
-    seq2_aligned.reverse()
+                seq1_aligned.insert(0, "-")
+                seq2_aligned.insert(0, seq2[column-1])
 
     seq1_aligned = "".join(seq1_aligned)
     seq2_aligned = "".join(seq2_aligned)
@@ -186,4 +182,4 @@ P1_output_primer = [("i", "TTCATA"),
                     ("j", "TGCTCGTA")]
 
 
-print(AlignByDP(P1_output))
+print(AlignByDP(P1_output_primer))

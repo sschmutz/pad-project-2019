@@ -36,7 +36,6 @@ def ValidSequences(sequences):
 
     valid_nucleotides = "ATGC"
 
-
     if type(sequences) is not list:
         return False
 
@@ -78,7 +77,7 @@ def AlignSequences(seq1, seq2):
 
     # the optimal paths for traceback will be saved in a list,
     # there's one element (tuple) for each optimal path which consists of
-    # two coordinates each (row, column) in tuples
+    # two coordinates each (row, column) stored in tuples
     # for example:
     # ((row from, column from), (row to, column to))
     optimal_paths = []

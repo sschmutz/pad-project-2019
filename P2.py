@@ -43,9 +43,9 @@ def ValidSequences(sequences):
     for entry in sequences:
         if type(entry) is not tuple:
             return False
-        elif len(entry) != 2:
+        if len(entry) != 2:
             return False
-        elif len(entry[0].split()) > 1:
+        if len(entry[0].split()) > 1:
             return False
 
         for element in entry:

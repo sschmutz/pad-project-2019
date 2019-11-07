@@ -117,30 +117,31 @@ def AlignSequences(seq1, seq2):
             matrix[row][column] = max_score
 
     # traceback following the possible paths
-    last_position = [(rows-1, columns-1)]
+    last_position = {"row":rows-1, "column":columns-1}
     seq1_aligned = []
     seq2_aligned = []
 
     # following part could probably be sped up with a while loop
     for row in range(rows-1, -1, -1):
         for column in range(columns-1, -1, -1):
-            if ((row-1, column-1), (row, column)) in possible_paths and (row, column) == last_position[-1]:
-                # it's a match or mismatch
-                last_position.append((row-1, column-1))
+            if ((row-1, column-1), (row, column)) in possible_paths and (row, column) == (last_position["row"], last_position["column"]):
+                # it's a match or mismatch, move to upper left
+                last_position["row"] -= 1
+                last_position["column"] -= 1
 
                 seq1_aligned.insert(0, seq1[row-1])
                 seq2_aligned.insert(0, seq2[column-1])
 
-            elif ((row-1, column), (row, column)) in possible_paths and (row, column) == last_position[-1]:
-                # it's an indel
-                last_position.append((row-1, column))
+            elif ((row-1, column), (row, column)) in possible_paths and (row, column) == (last_position["row"], last_position["column"]):
+                # it's an indel, move to above
+                last_position["row"] -= 1
 
                 seq1_aligned.insert(0, seq1[row-1])
                 seq2_aligned.insert(0, "-")
 
-            elif ((row, column-1), (row, column)) in possible_paths and (row, column) == last_position[-1]:
-                # it's an indel
-                last_position.append((row, column-1))
+            elif ((row, column-1), (row, column)) in possible_paths and (row, column) == (last_position["row"], last_position["column"]):
+                # it's an indel, move to left
+                last_position["column"] -= 1
 
                 seq1_aligned.insert(0, "-")
                 seq2_aligned.insert(0, seq2[column-1])

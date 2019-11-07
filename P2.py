@@ -76,23 +76,23 @@ def AlignSequences(seq1, seq2):
     rows = len(matrix)
     columns = len(matrix[0])
 
-    # the possible paths for traceback will be saved in a list,
-    # there's one element (tuple) for each possible path which consists of
+    # the optimal paths for traceback will be saved in a list,
+    # there's one element (tuple) for each optimal path which consists of
     # two coordinates each (row, column) in tuples
     # for example:
     # ((row from, column from), (row to, column to))
-    possible_paths = []
+    optimal_paths = []
 
     matrix[0][0] = 0
 
     # fill in i and j residues of seq1 and seq2 first
     for row in range(1, rows):
         matrix[row][0] = matrix[row-1][0] + indel
-        possible_paths.append(((row, 0), (row-1, 0)))
+        optimal_paths.append(((row, 0), (row-1, 0)))
 
     for column in range(1, columns):
         matrix[0][column] = matrix[0][column-1] + indel
-        possible_paths.append(((0, column), (0, column-1)))
+        optimal_paths.append(((0, column), (0, column-1)))
 
     # fill in rest of the matrix by defining the optimum alignment (highest score)
     # through either match, mismatch or indel for each position of the matrix
@@ -116,48 +116,45 @@ def AlignSequences(seq1, seq2):
 
             for path in scores:
                 if scores[path] == max_score:
-                    possible_paths.append(path)
+                    optimal_paths.append(path)
 
-    # traceback following the possible paths results in the aligned sequences
+    # traceback following the optimal paths results in the aligned sequences
+    # if there are multiple equally optimal paths, one is chosen arbitrarily as follows:
+    # upper left > above > left
     last_position = {"row":rows-1, "column":columns-1}
     seq1_aligned = []
     seq2_aligned = []
 
-    # following part could probably be simplified/sped up with a while loop
-    for row in range(rows-1, -1, -1):
-        for column in range(columns-1, -1, -1):
-            if ((row, column), (row-1, column-1)) in possible_paths and (row, column) == (last_position["row"], last_position["column"]):
-                # it's a match or mismatch, move to upper left
-                last_position["row"] -= 1
-                last_position["column"] -= 1
+    while last_position["row"] > 0 and last_position["column"] > 0:
+        row = last_position["row"]
+        column = last_position["column"]
 
-                seq1_aligned.insert(0, seq1[row-1])
-                seq2_aligned.insert(0, seq2[column-1])
+        if ((row, column), (row-1, column-1)) in optimal_paths:
+            # it's a match or mismatch, move to upper left
+            seq1_aligned.insert(0, seq1[row-1])
+            seq2_aligned.insert(0, seq2[column-1])
 
-            elif ((row, column), (row-1, column)) in possible_paths and (row, column) == (last_position["row"], last_position["column"]):
-                # it's an indel, move to above
-                last_position["row"] -= 1
+            last_position["row"] -= 1
+            last_position["column"] -= 1
 
-                seq1_aligned.insert(0, seq1[row-1])
-                seq2_aligned.insert(0, "-")
+        elif ((row, column), (row-1, column)) in optimal_paths:
+            # it's an indel, move to above
+            seq1_aligned.insert(0, seq1[row-1])
+            seq2_aligned.insert(0, "-")
 
-            elif ((row, column), (row, column-1)) in possible_paths and (row, column) == (last_position["row"], last_position["column"]):
-                # it's an indel, move to left
-                last_position["column"] -= 1
+            last_position["row"] -= 1
 
-                seq1_aligned.insert(0, "-")
-                seq2_aligned.insert(0, seq2[column-1])
+        elif ((row, column), (row, column-1)) in optimal_paths:
+            # it's an indel, move to left
+            seq1_aligned.insert(0, "-")
+            seq2_aligned.insert(0, seq2[column-1])
+
+            last_position["column"] -= 1
 
     seq1_aligned = "".join(seq1_aligned)
     seq2_aligned = "".join(seq2_aligned)
 
     return seq1_aligned, seq2_aligned
-
-
-
-
-
-
 
 
 
@@ -185,4 +182,4 @@ P1_output_primer = [("i", "TTCATA"),
                     ("j", "TGCTCGTA")]
 
 
-print(AlignByDP(P1_output_primer))
+print(AlignByDP(P1_output))

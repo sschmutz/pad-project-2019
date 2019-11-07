@@ -7,22 +7,19 @@ def AlignByDP(sequences):
     if not ValidSequences(sequences):
         raise Exception("malformed input")
 
-    alignments = dict()
+    aligned_sequences = dict()
 
-    # Compare each pair of the input sequences with eachother
+    # align each pair of the input sequences with eachother
+    # no alignment is made twice
     for entry1 in range(0, len(sequences)-1):
         for entry2 in range(entry1+1, len(sequences)):
 
             seq1 = sequences[entry1][1]
             seq2 = sequences[entry2][1]
 
-            # run alignment function which should return two strings (sequences)
-            # aligned to each eachother
+            aligned_sequences[(entry1, entry2)] = AlignSequences(seq1, seq2)
 
-            alignments[(entry1, entry2)] = AlignSequences(seq1, seq2)
-
-
-    return alignments
+    return aligned_sequences
 
 
 
@@ -68,27 +65,27 @@ def AlignSequences(seq1, seq2):
     """Takes two strings (nucleotide sequences) and returns aligned strings
     in a tuple"""
 
-    # using the scoring system as descibed in the Nature Primer publication
-    # "What is dynamic programming" by Sean R Eddy
+    # using the method and scoring system as descibed in the
+    # Nature Primer publication "What is dynamic programming" by Sean R Eddy
     match = 5
     mismatch = -2
     indel = -6
 
-    # set up of scoring matrix
     matrix = [[None for column in range(len(seq2)+1)] for row in range(len(seq1)+1)]
 
     rows = len(matrix)
     columns = len(matrix[0])
 
-    # the possible paths during traceback will be saved in a list,
-    # each path is a tuple containing two tuples
-    # with two elements (row, column) each
+    # the possible paths for traceback will be saved in a list,
+    # there's one element (tuple) for each possible path which consists of
+    # two coordinates each (row, column) in tuples
+    # for example:
+    # ((row from, column from), (row to, column to))
     possible_paths = []
 
-    # starting value of the matrix is defined as 0
     matrix[0][0] = 0
 
-    # populating first i and j residues of seq1 and seq2
+    # fill in i and j residues of seq1 and seq2 first
     for row in range(1, rows):
         matrix[row][0] = matrix[row-1][0] + indel
         possible_paths.append(((row, 0), (row-1, 0)))
@@ -97,7 +94,8 @@ def AlignSequences(seq1, seq2):
         matrix[0][column] = matrix[0][column-1] + indel
         possible_paths.append(((0, column), (0, column-1)))
 
-    # populating rest of the matrix
+    # fill in rest of the matrix by defining the optimum alignment (highest score)
+    # through either match, mismatch or indel for each position of the matrix
     for row in range(1, rows):
         for column in range(1, columns):
 
@@ -114,21 +112,18 @@ def AlignSequences(seq1, seq2):
                       ((row, column), (row, column-1)) : left}
 
             max_score = max(scores.values())
+            matrix[row][column] = max_score
 
             for path in scores:
                 if scores[path] == max_score:
                     possible_paths.append(path)
 
-            matrix[row][column] = max_score
-
-    # traceback following the possible paths
+    # traceback following the possible paths results in the aligned sequences
     last_position = {"row":rows-1, "column":columns-1}
     seq1_aligned = []
     seq2_aligned = []
 
-
-
-    # following part could probably be sped up with a while loop
+    # following part could probably be simplified/sped up with a while loop
     for row in range(rows-1, -1, -1):
         for column in range(columns-1, -1, -1):
             if ((row, column), (row-1, column-1)) in possible_paths and (row, column) == (last_position["row"], last_position["column"]):

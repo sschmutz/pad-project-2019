@@ -2,7 +2,8 @@
 
 def AlignByDP(sequences):
     """Reads list of sequence pairs (label, sequence) and returns a dictionary
-    of aligned sequences."""
+    of aligned sequences.
+    """
 
     if not ValidSequences(sequences):
         raise Exception("malformed input")
@@ -62,7 +63,8 @@ def ValidSequences(sequences):
 
 def AlignSequences(seq1, seq2):
     """Takes two strings (nucleotide sequences) and returns aligned strings
-    in a tuple"""
+    in a tuple
+    """
 
     # using the method and scoring system as descibed in the
     # Nature Primer publication "What is dynamic programming" by Sean R Eddy

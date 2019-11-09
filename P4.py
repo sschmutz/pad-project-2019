@@ -13,11 +13,9 @@ def Cluster(distance_matrix, labels):
         raise Exception("malformed input")
 
     distance_dict = DistanceMatrixToDict(distance_matrix, labels)
-
-
-    for label1 in distance_dict:
-        for label2 in distance_dict[label1]:
-            print(label1, label2, distance_dict[label1][label2])
+    (shortest_dist_pair, shortest_dist) = ShortestDistance(distance_dict)
+    
+    print(shortest_dist_pair, shortest_dist)
 
     return "woked so far"
 
@@ -75,6 +73,29 @@ def DistanceMatrixToDict(distance_matrix, labels):
             distance_dict[label1][label2] = distance_matrix[row][column+row]
 
     return distance_dict
+
+
+
+def ShortestDistance(distance_dict):
+
+    # first clustering
+    shortest_dist = None
+    shortest_dist_pair = None
+
+    for label1 in distance_dict:
+        for label2 in distance_dict[label1]:
+            dist = distance_dict[label1][label2]
+            dist_pair = (label1, label2)
+
+            if shortest_dist is None or shortest_dist > dist:
+                shortest_dist = dist
+                shortest_dist_pair = dist_pair
+
+    return shortest_dist_pair, shortest_dist
+
+
+
+
 
 
 

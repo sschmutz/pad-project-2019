@@ -3,6 +3,7 @@ WPGMA (Weighted Pair Group Method with Arithmetic Mean) method
 """
 
 from collections import defaultdict
+import copy
 
 def Cluster(distance_matrix, labels):
     """Reads distance matrix (list of lists) and list of labels, returns
@@ -13,13 +14,26 @@ def Cluster(distance_matrix, labels):
         raise Exception("malformed input")
 
     distance_dict = DistanceMatrixToDict(distance_matrix, labels)
-    shortest_dist_pair = ShortestDistance(distance_dict)
 
-    print(shortest_dist_pair)
+    tree = []
 
-    DistanceDictUpdate(distance_dict, shortest_dist_pair)
+    while len(distance_dict) > 1:
+        shortest_dist_pair = ShortestDistance(distance_dict)
+        print(shortest_dist_pair)
 
-    return "woked so far"
+
+        # TODO: Not working properly
+        if len(distance_dict) == 3:
+            tree.append(shortest_dist_pair)
+
+        if len(distance_dict) > 2:
+            distance_dict = DistanceDictUpdate(distance_dict, shortest_dist_pair)
+            print(distance_dict)
+        else:
+            tree.append(shortest_dist_pair)
+            # TODO: Type should be string!
+            print(type(tree))
+            return tree
 
 
 
@@ -106,42 +120,29 @@ def DistanceDictUpdate(distance_dict, shortest_dist_pair):
 
     for label1 in distance_dict:
         if label1 in shortest_dist_pair:
+            for label2 in distance_dict[label1]:
+                if label2 in shortest_dist_pair:
+                    continue
+
+                if shortest1 in distance_dict and label2 in distance_dict[shortest1]:
+                    summand1 = distance_dict[shortest1][label2]
+                else:
+                    summand1 = distance_dict[label2][shortest1]
+
+                if shortest2 in distance_dict and label2 in distance_dict[shortest2]:
+                    summand2 = distance_dict[shortest2][label2]
+                else:
+                    summand2 = distance_dict[label2][shortest2]
+
+                distance_dict_update[shortest_dist_pair][label2] = (summand1+summand2)/2
             continue
+
         for label2 in distance_dict[label1]:
             if label2 in shortest_dist_pair:
                 continue
             distance_dict_update[label1][label2] = distance_dict[label1][label2]
 
-    distance_dict_update[shortest_dist_pair] = {}
-    #distance_dict_update[shortest_dist_pair]["Mouse"] = 5
-    #dist = (distance_dict[shortest_dist_pair[0]]["Mouse"]+distance_dict[shortest_dist_pair[1]]["Mouse"])/2
-    #print(dist)
-
-
-    distance_dict_update[shortest_dist_pair]["c"] = (distance_dict[shortest_dist_pair[0]]["c"]+distance_dict[shortest_dist_pair[1]]["c"])/2
-    distance_dict_update[shortest_dist_pair]["d"] = (distance_dict[shortest_dist_pair[0]]["d"]+distance_dict[shortest_dist_pair[1]]["d"])/2
-    distance_dict_update[shortest_dist_pair]["e"] = (distance_dict[shortest_dist_pair[0]]["e"]+distance_dict[shortest_dist_pair[1]]["e"])/2
-
-
-    #distance_dict[shortest_dist_pair] = {"t":2}
-
-    # for label1 in distance_dict:
-    #     for label2 in distance_dict[label1]:
-    #         if label1 in shortest_dist_pair and label2 in shortest_dist_pair:
-    #             continue
-    #         average_dist = distance_dict[]
-    #         distance_dict[shortest_dist_pair] = {label1: }
-    #         print(label1, label2)
-
-    # for label1 in distance_dict:
-    #     for label2 in distance_dict[label1]:
-    #         if label2 in shortest_dist_pair:
-    #             distance_dict.pop(label1)
-    #     # if label1 in shortest_dist_pair:
-    #     #     del distance_dict[label1]
-
-    print(distance_dict)
-    print(distance_dict_update)
+    return distance_dict_update
 
 
 
@@ -171,4 +172,11 @@ wikipedia = [[0., 17., 21., 31., 23.],
              [23., 21., 39., 43., 0.]]
 wikipedia_labels = ["a", "b", "c", "d", "e"]
 
-print(Cluster(wikipedia, wikipedia_labels))
+wikipedia_2nd = [[0., 25.5, 32.5, 22.],
+                 [25.5, 0., 28., 39.],
+                 [32.5, 28., 0., 43.],
+                 [22., 39., 43., 0.]]
+
+wikipedia_labels_2nd = ["(a,b)", "c", "d", "e"]
+
+print(Cluster(P3_output_simplified, P3_output_labels_simplified))

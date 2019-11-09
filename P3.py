@@ -1,10 +1,13 @@
-"""This module creates a pairwise distance matrix from aligned sequences"""
+"""This module creates a pairwise distance matrix from aligned sequences
+using the JC69 model
+"""
 
 import math
 
 def ComputeDistMatrix(aligned_sequences):
     """Reads dictionary of aligned sequence pairs and returns a list of lists
-    containing evolutionary distances as a matrix"""
+    containing evolutionary distances as a matrix
+    """
 
     if not ValidAlignment(aligned_sequences):
         raise Exception("malformed input")
@@ -66,7 +69,8 @@ def ValidAlignment(aligned_sequences):
 
 def InitializeDistMatrix(combinations):
     """Takes an integer n and returns a n by n matrix (list of lists)
-    filled with None"""
+    filled with None
+    """
 
     size = int((math.sqrt(8*combinations+1)+1)/2)
     matrix = [[None for column in range(size)] for row in range(size)]
@@ -77,7 +81,8 @@ def InitializeDistMatrix(combinations):
 
 def PairwiseDistance(aligned_sequences, matrix):
     """Takes aligned sequences and a prepared matrix and returns
-    the matrix with calculated distances"""
+    the matrix with calculated distances
+    """
 
     # diagonal values compare same sequences, distance is 0
     for entry in range(0, len(matrix)):

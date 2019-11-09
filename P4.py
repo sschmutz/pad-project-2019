@@ -6,13 +6,15 @@ from collections import defaultdict
 
 def Cluster(distance_matrix, labels):
     """Reads distance matrix (list of lists) and list of labels, returns
-    a binary tree in string format
+    a binary tree in string format.
     """
 
     if not ValidDistanceMatrix(distance_matrix, labels):
         raise Exception("malformed input")
 
-    return "all good so far"
+    distance_dict = DistanceMatrixToDict(distance_matrix, labels)
+
+    return distance_dict
 
 
 
@@ -33,11 +35,11 @@ def ValidDistanceMatrix(distance_matrix, labels):
     if len(distance_matrix) != len(distance_matrix[0]):
         return False
 
-    for column in distance_matrix:
-        if type(column) is not list:
+    for row in distance_matrix:
+        if type(row) is not list:
             return False
 
-        for value in column:
+        for value in row:
             if type(value) is not float:
                 return False
 
@@ -55,10 +57,27 @@ def ValidDistanceMatrix(distance_matrix, labels):
 
 
 
-P3_output = [[0.0, 0.4099077797760524, 0.3831192178244929, 0.2979763481017525, 0.2979763481017525, 0.24710940084768174, 0.26627569086095443], [0.4099077797760524, 0.0, 0.3162942217349584, 0.35584348469633686, 0.3749669636468151, 0.3717121538268464, 0.255694940227945], [0.3831192178244929, 0.3162942217349584, 0.0, 0.34841551835862816, 0.5033762053808777, 0.2281585308022437, 0.27397429978712223], [0.2979763481017525, 0.35584348469633686, 0.34841551835862816, 0.0, 0.35584348469633686, 0.255694940227945, 0.2102264738656188], [0.2979763481017525, 0.3749669636468151, 0.5033762053808777, 0.35584348469633686, 0.0, 0.18848582121067953, 0.2102264738656188], [0.24710940084768174, 0.3717121538268464, 0.2281585308022437, 0.255694940227945, 0.18848582121067953, 0.0, 0.13947341105434174], [0.26627569086095443, 0.255694940227945, 0.27397429978712223, 0.2102264738656188, 0.2102264738656188, 0.13947341105434174, 0.0]]
-labels = ["Mouse", "Bovine", "Gibbon", "Orangutan", "Gorilla", "Chimp", "Human"]
+def DistanceMatrixToDict(distance_matrix, labels):
+    """Reads distance matrix and labels and returns a 2D dictionary."""
 
-print(Cluster(P3_output, labels))
+    distance_dict = defaultdict(dict)
+
+    for row in range(0, len(distance_matrix)-1):
+        for column in range(1, len(distance_matrix[0])-row):
+            label1 = labels[row]
+            label2 = labels[column+row]
+
+            distance_dict[label1][label2] = distance_matrix[row][column]
+
+    return distance_dict
+
+
+
+P3_output = [[0.0, 0.4099077797760524, 0.3831192178244929, 0.2979763481017525, 0.2979763481017525, 0.24710940084768174, 0.26627569086095443], [0.4099077797760524, 0.0, 0.3162942217349584, 0.35584348469633686, 0.3749669636468151, 0.3717121538268464, 0.255694940227945], [0.3831192178244929, 0.3162942217349584, 0.0, 0.34841551835862816, 0.5033762053808777, 0.2281585308022437, 0.27397429978712223], [0.2979763481017525, 0.35584348469633686, 0.34841551835862816, 0.0, 0.35584348469633686, 0.255694940227945, 0.2102264738656188], [0.2979763481017525, 0.3749669636468151, 0.5033762053808777, 0.35584348469633686, 0.0, 0.18848582121067953, 0.2102264738656188], [0.24710940084768174, 0.3717121538268464, 0.2281585308022437, 0.255694940227945, 0.18848582121067953, 0.0, 0.13947341105434174], [0.26627569086095443, 0.255694940227945, 0.27397429978712223, 0.2102264738656188, 0.2102264738656188, 0.13947341105434174, 0.0]]
+
+P3_output_labels = ["Mouse", "Bovine", "Gibbon", "Orangutan", "Gorilla", "Chimp", "Human"]
+
+print(Cluster(P3_output, P3_output_labels))
 
 
 
@@ -66,8 +85,6 @@ d = defaultdict(dict)
 
 d["a"]["b"] = 1
 d["a"]["c"] = 2
-
-print(d)
 
 for i in d:
     for j in d[i]:

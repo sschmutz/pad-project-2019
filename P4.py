@@ -14,23 +14,20 @@ def Cluster(distance_matrix, labels):
 
     distance_dict = DistanceMatrixToDict(distance_matrix, labels)
 
-    tree = []
 
     while len(distance_dict) > 2:
-        shortest_dist_pair = ShortestDistance(distance_dict)
-        print(shortest_dist_pair)
-        distance_dict = DistanceDictUpdate(distance_dict, shortest_dist_pair)
-        print(distance_dict)
+        shortest_dist_pair, shortest_dist_pair_name = ShortestDistance(distance_dict)
+        distance_dict = DistanceDictUpdate(distance_dict, shortest_dist_pair, shortest_dist_pair_name)
 
 
-    tree.append(shortest_dist_pair)
-    shortest_dist_pair = ShortestDistance(distance_dict)
+    tree = shortest_dist_pair_name
 
-    tree.append(shortest_dist_pair)
-    print(tree)
-    print(type(tree))
+    shortest_dist_pair, shortest_dist_pair_name = ShortestDistance(distance_dict)
 
-    return distance_dict
+    tree = "(%s, %s)" % (tree, shortest_dist_pair_name)
+
+
+    return tree
 
 
 
@@ -98,27 +95,34 @@ def ShortestDistance(distance_dict):
     for label1 in distance_dict:
         for label2 in distance_dict[label1]:
             dist = distance_dict[label1][label2]
-            dist_pair = (label1, label2)
+            dist_pair = [label1, label2]
 
             if shortest_dist is None or shortest_dist > dist:
                 shortest_dist = dist
                 shortest_dist_pair = dist_pair
 
-    return shortest_dist_pair
+    shortest_dist_pair_name = "(%s, %s)" % (shortest_dist_pair[0], shortest_dist_pair[1])
+
+    return shortest_dist_pair, shortest_dist_pair_name
 
 
 
-def DistanceDictUpdate(distance_dict, shortest_dist_pair):
+def DistanceDictUpdate(distance_dict, shortest_dist_pair, shortest_dist_pair_name):
 
     shortest1 = shortest_dist_pair[0]
     shortest2 = shortest_dist_pair[1]
+    print("shortest1", shortest1)
+    print("shortest2", shortest2)
 
     distance_dict_update = defaultdict(dict)
 
     for label1 in distance_dict:
         if label1 in shortest_dist_pair:
+            print("label1-short", label1)
             for label2 in distance_dict[label1]:
+                print("label2", label2)
                 if label2 in shortest_dist_pair:
+                    print("label2-short", label2)
                     continue
 
                 if shortest1 in distance_dict and label2 in distance_dict[shortest1]:
@@ -131,13 +135,17 @@ def DistanceDictUpdate(distance_dict, shortest_dist_pair):
                 else:
                     summand2 = distance_dict[label2][shortest2]
 
-                distance_dict_update[shortest_dist_pair][label2] = (summand1+summand2)/2
+                distance_dict_update[shortest_dist_pair_name][label2] = (summand1+summand2)/2
+                print("new calculated", distance_dict_update)
             continue
 
         for label2 in distance_dict[label1]:
+            print("label-notin", label1, "und", label2)
             if label2 in shortest_dist_pair:
+                print("label-notin-alreadyin", label1, "und", label2)
                 continue
             distance_dict_update[label1][label2] = distance_dict[label1][label2]
+            print("previous", distance_dict_update)
 
     return distance_dict_update
 

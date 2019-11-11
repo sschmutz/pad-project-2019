@@ -13,20 +13,16 @@ def Cluster(distance_matrix, labels):
         raise Exception("malformed input")
 
     distance_dict = DistanceMatrixToDict(distance_matrix, labels)
+    shortest_dist_pair, shortest_dist_pair_name = ShortestDistance(distance_dict)
 
 
-    while len(distance_dict) > 3:
-        shortest_dist_pair, shortest_dist_pair_name = ShortestDistance(distance_dict)
-        print(shortest_dist_pair_name)
+    while len(distance_dict) > 2:
+
         distance_dict = DistanceDictUpdate(distance_dict, shortest_dist_pair, shortest_dist_pair_name)
+        shortest_dist_pair, shortest_dist_pair_name = ShortestDistance(distance_dict)
 
 
     tree = shortest_dist_pair_name
-
-    shortest_dist_pair, shortest_dist_pair_name = ShortestDistance(distance_dict)
-    print(shortest_dist_pair_name)
-
-    tree = "(%s, %s)" % (tree, shortest_dist_pair_name)
 
     return tree
 
@@ -82,8 +78,6 @@ def DistanceMatrixToDict(distance_matrix, labels):
             label2 = labels[column+row]
 
             distance_dict[label1][label2] = distance_matrix[row][column+row]
-
-    print(distance_dict)
 
     return distance_dict
 

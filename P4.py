@@ -3,7 +3,6 @@ WPGMA (Weighted Pair Group Method with Arithmetic Mean) method
 """
 
 from collections import defaultdict
-import copy
 
 def Cluster(distance_matrix, labels):
     """Reads distance matrix (list of lists) and list of labels, returns
@@ -17,23 +16,21 @@ def Cluster(distance_matrix, labels):
 
     tree = []
 
-    while len(distance_dict) > 1:
+    while len(distance_dict) > 2:
         shortest_dist_pair = ShortestDistance(distance_dict)
         print(shortest_dist_pair)
+        distance_dict = DistanceDictUpdate(distance_dict, shortest_dist_pair)
+        print(distance_dict)
 
 
-        # TODO: Not working properly
-        if len(distance_dict) == 3:
-            tree.append(shortest_dist_pair)
+    tree.append(shortest_dist_pair)
+    shortest_dist_pair = ShortestDistance(distance_dict)
 
-        if len(distance_dict) > 2:
-            distance_dict = DistanceDictUpdate(distance_dict, shortest_dist_pair)
-            print(distance_dict)
-        else:
-            tree.append(shortest_dist_pair)
-            # TODO: Type should be string!
-            print(type(tree))
-            return tree
+    tree.append(shortest_dist_pair)
+    print(tree)
+    print(type(tree))
+
+    return distance_dict
 
 
 
@@ -179,4 +176,4 @@ wikipedia_2nd = [[0., 25.5, 32.5, 22.],
 
 wikipedia_labels_2nd = ["(a,b)", "c", "d", "e"]
 
-print(Cluster(P3_output_simplified, P3_output_labels_simplified))
+print(Cluster(wikipedia, wikipedia_labels))

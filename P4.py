@@ -15,17 +15,18 @@ def Cluster(distance_matrix, labels):
     distance_dict = DistanceMatrixToDict(distance_matrix, labels)
 
 
-    while len(distance_dict) > 2:
+    while len(distance_dict) > 3:
         shortest_dist_pair, shortest_dist_pair_name = ShortestDistance(distance_dict)
+        print(shortest_dist_pair_name)
         distance_dict = DistanceDictUpdate(distance_dict, shortest_dist_pair, shortest_dist_pair_name)
 
 
     tree = shortest_dist_pair_name
 
     shortest_dist_pair, shortest_dist_pair_name = ShortestDistance(distance_dict)
+    print(shortest_dist_pair_name)
 
     tree = "(%s, %s)" % (tree, shortest_dist_pair_name)
-
 
     return tree
 
@@ -75,12 +76,14 @@ def DistanceMatrixToDict(distance_matrix, labels):
 
     distance_dict = defaultdict(dict)
 
-    for row in range(0, len(distance_matrix)-1):
-        for column in range(1, len(distance_matrix[0])-row):
+    for row in range(0, len(distance_matrix)):
+        for column in range(0, len(distance_matrix[0])-row):
             label1 = labels[row]
             label2 = labels[column+row]
 
             distance_dict[label1][label2] = distance_matrix[row][column+row]
+
+    print(distance_dict)
 
     return distance_dict
 
@@ -94,6 +97,9 @@ def ShortestDistance(distance_dict):
 
     for label1 in distance_dict:
         for label2 in distance_dict[label1]:
+            if label1 == label2:
+                continue
+
             dist = distance_dict[label1][label2]
             dist_pair = [label1, label2]
 
@@ -111,41 +117,28 @@ def DistanceDictUpdate(distance_dict, shortest_dist_pair, shortest_dist_pair_nam
 
     shortest1 = shortest_dist_pair[0]
     shortest2 = shortest_dist_pair[1]
-    print("shortest1", shortest1)
-    print("shortest2", shortest2)
 
     distance_dict_update = defaultdict(dict)
+    distance_dict_update[shortest_dist_pair_name][shortest_dist_pair_name] = 0.0
 
     for label1 in distance_dict:
-        if label1 in shortest_dist_pair:
-            print("label1-short", label1)
+        if label1 not in shortest_dist_pair:
+            if shortest1 in distance_dict and label1 in distance_dict[shortest1]:
+                summand1 = distance_dict[shortest1][label1]
+            else:
+                summand1 = distance_dict[label1][shortest1]
+
+            if shortest2 in distance_dict and label1 in distance_dict[shortest2]:
+                summand2 = distance_dict[shortest2][label1]
+            else:
+                summand2 = distance_dict[label1][shortest2]
+
+            distance_dict_update[shortest_dist_pair_name][label1] = (summand1+summand2)/2
+
             for label2 in distance_dict[label1]:
-                print("label2", label2)
                 if label2 in shortest_dist_pair:
-                    print("label2-short", label2)
                     continue
-
-                if shortest1 in distance_dict and label2 in distance_dict[shortest1]:
-                    summand1 = distance_dict[shortest1][label2]
-                else:
-                    summand1 = distance_dict[label2][shortest1]
-
-                if shortest2 in distance_dict and label2 in distance_dict[shortest2]:
-                    summand2 = distance_dict[shortest2][label2]
-                else:
-                    summand2 = distance_dict[label2][shortest2]
-
-                distance_dict_update[shortest_dist_pair_name][label2] = (summand1+summand2)/2
-                print("new calculated", distance_dict_update)
-            continue
-
-        for label2 in distance_dict[label1]:
-            print("label-notin", label1, "und", label2)
-            if label2 in shortest_dist_pair:
-                print("label-notin-alreadyin", label1, "und", label2)
-                continue
-            distance_dict_update[label1][label2] = distance_dict[label1][label2]
-            print("previous", distance_dict_update)
+                distance_dict_update[label1][label2] = distance_dict[label1][label2]
 
     return distance_dict_update
 
@@ -184,4 +177,4 @@ wikipedia_2nd = [[0., 25.5, 32.5, 22.],
 
 wikipedia_labels_2nd = ["(a,b)", "c", "d", "e"]
 
-print(Cluster(wikipedia, wikipedia_labels))
+print(Cluster(P3_output, P3_output_labels))

@@ -36,7 +36,7 @@ def ValidDistanceMatrix(distance_matrix, labels):
 
     labels is a list of strings with the same length of the matrix
 
-    ?TODO matrix contains 0 on the diagonal
+    ?TODO check if matrix contains 0 on the diagonal
     """
 
     if type(distance_matrix) is not list:
@@ -68,7 +68,7 @@ def ValidDistanceMatrix(distance_matrix, labels):
 
 
 def DistanceMatrixToDict(distance_matrix, labels):
-    """Reads distance matrix and labels and returns a 2D dictionary."""
+    """Reads distance matrix and its labels and returns a 2D dictionary."""
 
     distance_dict = defaultdict(dict)
 
@@ -84,8 +84,11 @@ def DistanceMatrixToDict(distance_matrix, labels):
 
 
 def ShortestDistance(distance_dict):
+    """Takes a 2D dictionary containing distance information and returns a list
+    with the labels of the two closest entries and a string formatted according
+    requirements for the tree.
+    """
 
-    # first clustering
     shortest_dist = None
     shortest_dist_pair = None
 
@@ -108,6 +111,9 @@ def ShortestDistance(distance_dict):
 
 
 def DistanceDictUpdate(distance_dict, shortest_dist_pair, shortest_dist_pair_name):
+    """Takes 2D dictionary containing distance information and infromation about
+    shortest distance pair, reduces the dictionary and returns an updated one.
+    """
 
     shortest1 = shortest_dist_pair[0]
     shortest2 = shortest_dist_pair[1]
@@ -171,4 +177,4 @@ wikipedia_2nd = [[0., 25.5, 32.5, 22.],
 
 wikipedia_labels_2nd = ["(a,b)", "c", "d", "e"]
 
-print(Cluster(P3_output, P3_output_labels))
+print(Cluster(P3_output_simplified, P3_output_labels_simplified))

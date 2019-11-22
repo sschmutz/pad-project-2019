@@ -76,7 +76,7 @@ def ValidSeq(line):
         return (label, nucleotides)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     path_file = "/Users/stefan_schmutz/Documents/GitHub/pad-project-2019/input/sequeces_example_1.txt"
-    
+
     print(ParseSeqFile(path_file))

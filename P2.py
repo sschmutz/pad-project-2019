@@ -158,7 +158,7 @@ def AlignSequences(seq1, seq2):
     return seq1_aligned, seq2_aligned
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     P1_output = [("Mouse", "ACCAAACATCCAAACACCAACCCCAGCCCTTACGCAATCATACAAAGAATATT"),
                  ("Bovine", "ACCAAACCTGTCCCCATCTAACACCAACCCACATATACAAGCTAAACCAAAAATACC"),
                  ("Gibbon", "ACTATACCCACCCAACTCGACCTACACCAATCCCCACATAGCACACAGACCAACAACCTC"),

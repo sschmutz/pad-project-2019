@@ -1,12 +1,12 @@
 """This module creates a pairwise distance matrix from aligned sequences
-using the JC69 model
+using the JC69 model.
 """
 
-import math
+from math import sqrt, log
 
 def ComputeDistMatrix(aligned_sequences):
     """Reads dictionary of aligned sequence pairs and returns a list of lists
-    containing evolutionary distances as a matrix
+    containing evolutionary distances as a matrix.
     """
 
     if not ValidAlignment(aligned_sequences):
@@ -22,14 +22,12 @@ def ComputeDistMatrix(aligned_sequences):
 def ValidAlignment(aligned_sequences):
     """Reads dictionary of aligned sequence pairs with structure
     (entry1, entry2): (aligned_seq1, aligned_seq2)
-    and returns False if not valid.
+    returns True if valid and False otherwise.
 
-    entry1 and 2 should be of type integer
+    Entry1 and 2 should be integers.
 
-    aligned_seq1 and 2 ahould be of type string, have the same length and
-    only containing uppercase A, T, G, C or -
-
-    ?TODO test if all possible combinations are present
+    Aligned_seq1 and 2 ahould be strings, have the same length and
+    only containing uppercase A, T, G, C or -.
     """
 
     valid_nucleotides = "ATGC-"
@@ -68,11 +66,11 @@ def ValidAlignment(aligned_sequences):
 
 
 def InitializeDistMatrix(combinations):
-    """Takes an integer n and returns a n by n matrix (list of lists)
-    filled with None
+    """Takes an integer and returns a n by n matrix (list of lists) of appropriate
+    size filled with None.
     """
 
-    size = int((math.sqrt(8*combinations+1)+1)/2)
+    size = int((sqrt(8*combinations+1)+1)/2)
     matrix = [[None for column in range(size)] for row in range(size)]
 
     return matrix
@@ -81,29 +79,32 @@ def InitializeDistMatrix(combinations):
 
 def PairwiseDistance(aligned_sequences, matrix):
     """Takes aligned sequences and a prepared matrix and returns
-    the matrix with calculated distances
+    the matrix (list of lists) filled with calculated distances as float.
     """
 
-    # diagonal values compare same sequences, distance is 0
+    # diagonal values compare same sequences, distance is 0.
     for entry in range(0, len(matrix)):
         matrix[entry][entry] = 0.
 
     # for each alignment the distance (d_dist) is estimated using the JC69 model
     for pair in aligned_sequences:
         nucleotide_total = len(aligned_sequences[pair][0])
+
         nucleotide_difference = 0
 
         for nucleotide in range(0, nucleotide_total):
             entry1_nucleotide = aligned_sequences[pair][0][nucleotide]
             entry2_nucleotide = aligned_sequences[pair][1][nucleotide]
 
+            # for he p_dist computation all gap positions are excluded and only
+            # nucleotide differences are considered
             if entry1_nucleotide == "-" or entry2_nucleotide == "-":
                 continue
             if entry1_nucleotide != entry2_nucleotide:
                 nucleotide_difference += 1
 
         p_dist = nucleotide_difference/nucleotide_total
-        d_dist = -3/4*math.log(1-p_dist*4/3)
+        d_dist = -3/4*log(1-p_dist*4/3)
 
         matrix[pair[0]][pair[1]] = d_dist
         matrix[pair[1]][pair[0]] = d_dist

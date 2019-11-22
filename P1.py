@@ -1,4 +1,4 @@
-"""This module reads labels and sequences from a text file."""
+"""This module reads labels and corresponding sequences from a text file."""
 
 
 

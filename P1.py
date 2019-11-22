@@ -4,14 +4,14 @@ import os
 
 
 
-def ParseSeqFile(path, filename):
+def ParseSeqFile(path_file):
     """Parse a sequence file and return a list of pairs (label, sequence).
 
     path:       path of directory where the sequence file is located
     filename:   filename (including extension) of the sequence file
     """
 
-    seq_file = OpenSeqFile(path, filename)
+    seq_file = OpenSeqFile(path_file)
     seq_pairs = []
 
     for line in seq_file:
@@ -28,12 +28,11 @@ def ParseSeqFile(path, filename):
 
 
 
-def OpenSeqFile(path, filename):
+def OpenSeqFile(path_file):
     """Opens a sequence file if possible and returns it."""
 
     try:
-        full_filename = os.path.join(path, filename)
-        seq_file = open(full_filename, "r")
+        seq_file = open(path_file, "r")
     except FileNotFoundError:
         print("Combination of path and filename can't be opened.")
         raise
@@ -77,7 +76,7 @@ def ValidSeq(line):
         return (label, nucleotides)
 
 
-
-PATH = "/Users/stefan_schmutz/Documents/GitHub/pad-project-2019/input"
-FILENAME = "sequeces_example_1.txt"
-print(ParseSeqFile(PATH, FILENAME))
+if __name__ == '__main__':
+    path_file = "/Users/stefan_schmutz/Documents/GitHub/pad-project-2019/input/sequeces_example_1.txt"
+    
+    print(ParseSeqFile(path_file))

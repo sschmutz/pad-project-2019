@@ -75,13 +75,13 @@ def ValidDistanceMatrix(distance_matrix, labels):
 
 def DistanceMatrixToDict(distance_matrix, labels):
     """Reads distance matrix and its labels and returns a 2D dictionary with
-    labels as keys and distance as values.
+    labels as keys and pairwise distance as values.
     """
 
     distance_dict = defaultdict(dict)
 
     for row in range(0, len(distance_matrix)):
-        for column in range(0, len(distance_matrix[0])-row):
+        for column in range(0, len(distance_matrix)-row):
             label1 = labels[row]
             label2 = labels[column+row]
 

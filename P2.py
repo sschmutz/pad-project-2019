@@ -1,4 +1,6 @@
-"""This module uses dynamic programming to align nucleotide sequences"""
+"""This module uses dynamic programming to align pairs of nucleotide sequences."""
+
+
 
 def AlignByDP(sequences):
     """Reads list of sequence pairs (label, sequence) and returns a dictionary
@@ -25,14 +27,14 @@ def AlignByDP(sequences):
 
 
 def ValidSequences(sequences):
-    """Reads list of sequence pairs (label, sequence) and returns False if not valid.
+    """Reads list of sequence pairs (label, sequence), returns True if valid
+    and False otherwise.
 
-    sequences should be of type list,
-    contain tuples of length 2 of which both are of type string
+    Sequences should be type list,
+    contain tuples with length 2 of which both are type string.
 
-    while the first element represents the label without any whitespace character
-    the second element should be a nucleotide sequence only containing
-    uppercase A, T, G, C
+    While the first element represents the label the second element should be
+    a nucleotide sequence only containing uppercase A, T, G or C.
     """
 
     valid_nucleotides = "ATGC"
@@ -44,8 +46,6 @@ def ValidSequences(sequences):
         if type(entry) is not tuple:
             return False
         if len(entry) != 2:
-            return False
-        if len(entry[0].split()) > 1:
             return False
 
         for element in entry:
@@ -63,11 +63,12 @@ def ValidSequences(sequences):
 
 def AlignSequences(seq1, seq2):
     """Takes two strings (nucleotide sequences) and returns aligned strings
-    in a tuple
+    in a tuple.
+
+    Using the method and scoring system as descibed in the
+    Nature Primer publication "What is dynamic programming" by Sean R Eddy.
     """
 
-    # using the method and scoring system as descibed in the
-    # Nature Primer publication "What is dynamic programming" by Sean R Eddy
     match = 5
     mismatch = -2
     indel = -6
@@ -155,7 +156,7 @@ def AlignSequences(seq1, seq2):
     seq1_aligned = "".join(seq1_aligned)
     seq2_aligned = "".join(seq2_aligned)
 
-    return seq1_aligned, seq2_aligned
+    return (seq1_aligned, seq2_aligned)
 
 
 if __name__ == "__main__":

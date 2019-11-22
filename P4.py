@@ -13,11 +13,14 @@ def Cluster(distance_matrix, labels):
         raise Exception("malformed input")
 
     distance_dict = DistanceMatrixToDict(distance_matrix, labels)
-    shortest_dist_pair, tree = ShortestDistance(distance_dict)
 
-    while len(distance_dict) > 2:
-        distance_dict = DistanceDictUpdate(distance_dict, shortest_dist_pair, tree)
-        shortest_dist_pair, tree = ShortestDistance(distance_dict)
+    while len(distance_dict) > 1:
+        closest_pair = ShortestDistance(distance_dict)
+        distance_dict = DistanceDictUpdate(distance_dict, closest_pair)
+
+    # to end up with a properly formatted tree,
+    # the list of the closest pair needs to be reformatted
+    tree = "(%s, %s)" % (closest_pair[0], closest_pair[1])
 
     return tree
 
@@ -90,12 +93,11 @@ def DistanceMatrixToDict(distance_matrix, labels):
 
 def ShortestDistance(distance_dict):
     """Takes a 2D dictionary containing distance information and returns a list
-    with the labels of the two closest entries and a string formatted according
-    requirements for the tree.
+    with the labels of the two closest elements.
     """
 
-    shortest_dist = None
-    shortest_dist_pair = None
+    closest_dist = None
+    closest_pair = None
 
     for label1 in distance_dict:
         for label2 in distance_dict[label1]:
@@ -104,46 +106,48 @@ def ShortestDistance(distance_dict):
 
             dist = distance_dict[label1][label2]
 
-            if shortest_dist is None or shortest_dist > dist:
-                shortest_dist = dist
-                shortest_dist_pair = [label1, label2]
+            if closest_dist is None or closest_dist > dist:
+                closest_dist = dist
+                closest_pair = [label1, label2]
 
-    tree = "(%s, %s)" % (shortest_dist_pair[0], shortest_dist_pair[1])
-
-    return (shortest_dist_pair, tree)
+    return closest_pair
 
 
 
-def DistanceDictUpdate(distance_dict, shortest_dist_pair, tree):
-    """Takes 2D dictionary containing distance information and information about
-    shortest distance pair as well as the current tree, reduces the dictionary
-    and returns an updated one.
+def DistanceDictUpdate(distance_dict, closest_pair):
+    """Takes a 2D dictionary containing distance information and
+    the closest pair, reduces it and returns an updated dictionary.
+
+    The new distances are calculated by averaging distances between each element
+    and the closest pair.
     """
 
-    shortest1 = shortest_dist_pair[0]
-    shortest2 = shortest_dist_pair[1]
+    closest1 = closest_pair[0]
+    closest2 = closest_pair[1]
+
+    closest_pair_label = "(%s, %s)" % (closest_pair[0], closest_pair[1])
 
     distance_dict_update = defaultdict(dict)
-    distance_dict_update[tree][tree] = 0.
+    distance_dict_update[closest_pair_label][closest_pair_label] = 0.
 
     for label1 in distance_dict:
-        if label1 not in shortest_dist_pair:
-            if shortest1 in distance_dict and label1 in distance_dict[shortest1]:
-                summand1 = distance_dict[shortest1][label1]
+        if label1 not in closest_pair:
+            if closest1 in distance_dict and label1 in distance_dict[closest1]:
+                summand1 = distance_dict[closest1][label1]
             else:
-                summand1 = distance_dict[label1][shortest1]
+                summand1 = distance_dict[label1][closest1]
 
-            if shortest2 in distance_dict and label1 in distance_dict[shortest2]:
-                summand2 = distance_dict[shortest2][label1]
+            if closest2 in distance_dict and label1 in distance_dict[closest2]:
+                summand2 = distance_dict[closest2][label1]
             else:
-                summand2 = distance_dict[label1][shortest2]
+                summand2 = distance_dict[label1][closest2]
 
-            distance_dict_update[tree][label1] = (summand1+summand2)/2
+            distance_dict_update[closest_pair_label][label1] = (summand1+summand2)/2
 
             for label2 in distance_dict[label1]:
-                if label2 in shortest_dist_pair:
-                    continue
-                distance_dict_update[label1][label2] = distance_dict[label1][label2]
+                if label2 not in closest_pair:
+                    distance_dict_update[label1][label2] = distance_dict[label1][label2]
+
 
     return distance_dict_update
 
@@ -159,5 +163,13 @@ if __name__ == "__main__":
                  [0.26627569086095443, 0.255694940227945, 0.27397429978712223, 0.2102264738656188, 0.2102264738656188, 0.13947341105434174, 0.0]]
 
     P3_output_labels = ["Mouse", "Bovine", "Gibbon", "Orangutan", "Gorilla", "Chimp", "Human"]
+
+    wikipedia_example = [[0.0, 17.0, 21.0, 31.0, 23.0],
+                         [17.0, 0.0, 30.0, 34.0, 21.0],
+                         [21.0, 30.0, 0.0, 28.0, 39.0],
+                         [31.0, 34.0, 28.0, 0.0, 43.0],
+                         [23.0, 21.0, 39.0, 43.0, 0.0]]
+
+    wikipedia_example_labels = ["a", "b", "c", "d", "e"]
 
     print(Cluster(P3_output, P3_output_labels))

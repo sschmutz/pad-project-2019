@@ -77,6 +77,6 @@ def ValidSeq(line):
 
 
 if __name__ == "__main__":
-    path_file = "/Users/stefan_schmutz/Documents/GitHub/pad-project-2019/input/sequeces_example_1.txt"
+    path_file = "/Users/stefan_schmutz/Documents/GitHub/pad-project-2019/input/sequeces_example.txt"
 
     print(ParseSeqFile(path_file))

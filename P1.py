@@ -26,15 +26,16 @@ def ParseSeqFile(path_filename):
 
 
 def ValidSeq(line):
-    """Read line from SeqFile and return matching label and sequence in a tuple.
+    """Reads line from a Sequence File and returns matching label and sequence
+    as string in a tuple.
 
     Checks format of line from sequence file, strips all whitespace characters
     and only returns the label and nucleotide sequence if formatted properly:
         - Line starts with a ">" character
         - First item is present (label)
-        - Second item is present (nucleotide sequence consisting of A, T, G or C)
+        - Second item is present (nucleotide sequence consisting of only A, T, G or C)
 
-    Returns "None" if the line isn't valid.
+    Returns None if the line isn't valid.
     """
 
     if line[0] == ">":
@@ -43,14 +44,12 @@ def ValidSeq(line):
             # Per definition, the first element after the ">" sign is the label
             label = line[1:].split()[0]
 
-            # Extract everything after the label and return upper case letters
+            # Extract everything after the label which is the nucleotide sequence
             nucleotides_raw = line[1:].split(maxsplit=1)[1].upper()
-            # Remove all whitespace characters from the nucleotide sequence
             nucleotides = "".join(nucleotides_raw.split())
         except ValueError:
             return None
 
-        # We only deal with upper case nucleotide letters
         valid_nucleotides = "ATGC"
 
         for nucleotide in nucleotides:
@@ -58,6 +57,7 @@ def ValidSeq(line):
                 return None
 
         return (label, nucleotides)
+
 
 
 if __name__ == "__main__":

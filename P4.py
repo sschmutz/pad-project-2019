@@ -80,13 +80,12 @@ def DistanceMatrixToDict(distance_matrix, labels):
 
     distance_dict = defaultdict(dict)
 
-    # writing only half of the distance matrix to the 2D dictionary to avoid redundancy
     for row in range(len(distance_matrix)):
-        for column in range(len(distance_matrix)-row):
+        for column in range(len(distance_matrix)):
             label1 = labels[row]
-            label2 = labels[column+row]
+            label2 = labels[column]
 
-            distance_dict[label1][label2] = distance_matrix[row][column+row]
+            distance_dict[label1][label2] = distance_matrix[row][column]
 
     return distance_dict
 
@@ -133,17 +132,10 @@ def DistanceDictUpdate(distance_dict, closest_pair):
 
     for label1 in distance_dict:
         if label1 not in closest_pair:
-            if closest1 in distance_dict and label1 in distance_dict[closest1]:
-                summand1 = distance_dict[closest1][label1]
-            else:
-                summand1 = distance_dict[label1][closest1]
+            ave_dist = (distance_dict[label1][closest1]+distance_dict[label1][closest2])/2
 
-            if closest2 in distance_dict and label1 in distance_dict[closest2]:
-                summand2 = distance_dict[closest2][label1]
-            else:
-                summand2 = distance_dict[label1][closest2]
-
-            distance_dict_update[closest_pair_label][label1] = (summand1+summand2)/2
+            distance_dict_update[closest_pair_label][label1] = ave_dist
+            distance_dict_update[label1][closest_pair_label] = ave_dist
 
             for label2 in distance_dict[label1]:
                 if label2 not in closest_pair:

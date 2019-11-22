@@ -1,11 +1,11 @@
 """This module clusters sequences based on a distance matrix using the
-WPGMA (Weighted Pair Group Method with Arithmetic Mean) method
+WPGMA (Weighted Pair Group Method with Arithmetic Mean) method.
 """
 
 from collections import defaultdict
 
 def Cluster(distance_matrix, labels):
-    """Reads distance matrix (list of lists) and list of labels, returns
+    """Reads distance matrix (list of lists) and a list of labels, returns
     a binary tree in string format.
     """
 
@@ -13,36 +13,29 @@ def Cluster(distance_matrix, labels):
         raise Exception("malformed input")
 
     distance_dict = DistanceMatrixToDict(distance_matrix, labels)
-    shortest_dist_pair, shortest_dist_pair_name = ShortestDistance(distance_dict)
-
+    shortest_dist_pair, tree = ShortestDistance(distance_dict)
 
     while len(distance_dict) > 2:
-
-        distance_dict = DistanceDictUpdate(distance_dict, shortest_dist_pair, shortest_dist_pair_name)
-        shortest_dist_pair, shortest_dist_pair_name = ShortestDistance(distance_dict)
-
-
-    tree = shortest_dist_pair_name
+        distance_dict = DistanceDictUpdate(distance_dict, shortest_dist_pair, tree)
+        shortest_dist_pair, tree = ShortestDistance(distance_dict)
 
     return tree
 
 
 
 def ValidDistanceMatrix(distance_matrix, labels):
-    """Reads distance matrix (list of lists) and list of labels
-    and returns False if the structure is not valid.
+    """Reads distance matrix (list of lists) and list of labels,
+    returns True if the structure is valid and False otherwise.
 
-    distance matrix should be of type list of lists (rectangular)
+    Distance matrix should be of type list of lists, containing floats >= 0. and
+    the same number of rows and columns.
 
-    labels is a list of strings with the same length of the matrix
+    The diagonal of the distance matrix has to be 0.
 
-    ?TODO check if matrix contains 0 on the diagonal
+    Labels is a list of strings with the same length of the matrix.
     """
 
     if type(distance_matrix) is not list:
-        return False
-
-    if len(distance_matrix) != len(distance_matrix[0]):
         return False
 
     for row in distance_matrix:
@@ -50,8 +43,18 @@ def ValidDistanceMatrix(distance_matrix, labels):
             return False
 
         for value in row:
-            if type(value) is not float:
+            if type(value) is not float or value < 0.:
                 return False
+
+    rows = len(distance_matrix)
+    columns = len(distance_matrix[0])
+
+    if rows != columns:
+        return False
+
+    for row, column in zip(range(rows), range(columns)):
+        if distance_matrix[row][column] != 0.:
+            return False
 
     if type(labels) is not list:
         return False
@@ -60,7 +63,7 @@ def ValidDistanceMatrix(distance_matrix, labels):
         if type(label) is not str:
             return False
 
-    if len(distance_matrix) != len(labels):
+    if rows != len(labels):
         return False
 
     return True
@@ -68,7 +71,9 @@ def ValidDistanceMatrix(distance_matrix, labels):
 
 
 def DistanceMatrixToDict(distance_matrix, labels):
-    """Reads distance matrix and its labels and returns a 2D dictionary."""
+    """Reads distance matrix and its labels and returns a 2D dictionary with
+    labels as keys and distance as values.
+    """
 
     distance_dict = defaultdict(dict)
 
@@ -98,28 +103,28 @@ def ShortestDistance(distance_dict):
                 continue
 
             dist = distance_dict[label1][label2]
-            dist_pair = [label1, label2]
 
             if shortest_dist is None or shortest_dist > dist:
                 shortest_dist = dist
-                shortest_dist_pair = dist_pair
+                shortest_dist_pair = [label1, label2]
 
-    shortest_dist_pair_name = "(%s, %s)" % (shortest_dist_pair[0], shortest_dist_pair[1])
+    tree = "(%s, %s)" % (shortest_dist_pair[0], shortest_dist_pair[1])
 
-    return shortest_dist_pair, shortest_dist_pair_name
+    return (shortest_dist_pair, tree)
 
 
 
-def DistanceDictUpdate(distance_dict, shortest_dist_pair, shortest_dist_pair_name):
-    """Takes 2D dictionary containing distance information and infromation about
-    shortest distance pair, reduces the dictionary and returns an updated one.
+def DistanceDictUpdate(distance_dict, shortest_dist_pair, tree):
+    """Takes 2D dictionary containing distance information and information about
+    shortest distance pair as well as the current tree, reduces the dictionary
+    and returns an updated one.
     """
 
     shortest1 = shortest_dist_pair[0]
     shortest2 = shortest_dist_pair[1]
 
     distance_dict_update = defaultdict(dict)
-    distance_dict_update[shortest_dist_pair_name][shortest_dist_pair_name] = 0.0
+    distance_dict_update[tree][tree] = 0.
 
     for label1 in distance_dict:
         if label1 not in shortest_dist_pair:
@@ -133,7 +138,7 @@ def DistanceDictUpdate(distance_dict, shortest_dist_pair, shortest_dist_pair_nam
             else:
                 summand2 = distance_dict[label1][shortest2]
 
-            distance_dict_update[shortest_dist_pair_name][label1] = (summand1+summand2)/2
+            distance_dict_update[tree][label1] = (summand1+summand2)/2
 
             for label2 in distance_dict[label1]:
                 if label2 in shortest_dist_pair:

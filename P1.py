@@ -1,43 +1,27 @@
 """This module reads labels and sequences from a text file."""
 
-import os
 
 
-
-def ParseSeqFile(path_file):
-    """Parse a sequence file and return a list of pairs (label, sequence).
-
-    path:       path of directory where the sequence file is located
-    filename:   filename (including extension) of the sequence file
+def ParseSeqFile(path_filename):
+    """Takes a filepath as string, parses the containing sequences
+    and returns a list of tuple pairs as string (label, sequence).
     """
 
-    seq_file = OpenSeqFile(path_file)
+    seq_file = open(path_filename, "r")
     seq_pairs = []
 
     for line in seq_file:
-        if ValidSeq(line):
-            seq_pairs.append(ValidSeq(line))
+        valid_line = ValidSeq(line)
+
+        if valid_line:
+            seq_pairs.append(valid_line)
 
     seq_file.close()
 
-    if seq_pairs:
+    if len(seq_pairs) > 0:
         return seq_pairs
-
-    # only raises exception if no line contains a valid sequence pair
-    raise Exception("malformed input")
-
-
-
-def OpenSeqFile(path_file):
-    """Opens a sequence file if possible and returns it."""
-
-    try:
-        seq_file = open(path_file, "r")
-    except FileNotFoundError:
-        print("Combination of path and filename can't be opened.")
-        raise
-
-    return seq_file
+    else:
+        raise Exception("malformed input")
 
 
 
@@ -77,6 +61,6 @@ def ValidSeq(line):
 
 
 if __name__ == "__main__":
-    path_file = "/Users/stefan_schmutz/Documents/GitHub/pad-project-2019/input/sequeces_example.txt"
+    path_filename = "/Users/stefan_schmutz/Documents/GitHub/pad-project-2019/input/sequeces_example.txt"
 
-    print(ParseSeqFile(path_file))
+    print(ParseSeqFile(path_filename))

@@ -6,7 +6,7 @@ import P3
 import P4
 
 print("\nModule P1 --------------------------------------------\n")
-path_filename = "/Users/stefan_schmutz/Documents/GitHub/pad-project-2019/input/sequeces_example.txt"
+path_filename = "./input/sequeces_example.txt"
 P1_output = P1.ParseSeqFile(path_filename)
 print(P1_output)
 

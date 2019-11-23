@@ -61,6 +61,6 @@ def ValidSeq(line):
 
 
 if __name__ == "__main__":
-    path_filename = "/Users/stefan_schmutz/Documents/GitHub/pad-project-2019/input/sequeces_example.txt"
+    path_filename = "./input/sequeces_example.txt"
 
     print(ParseSeqFile(path_filename))

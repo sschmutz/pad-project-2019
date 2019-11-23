@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.com/sschmutz/pad-project-2019.svg?token=7qkqv7jypCCWxniT4rin&branch=master)](https://travis-ci.com/sschmutz/pad-project-2019)
+[![codecov](https://codecov.io/gh/sschmutz/pad-project-2019/branch/master/graph/badge.svg?token=dEYcxfaoRY)](https://codecov.io/gh/sschmutz/pad-project-2019)
+
 # pad-project-2019
 >reads genomics sequences from a file and clusters them in a tree according
 to their pairwise evolutionary distances
@@ -13,7 +16,7 @@ Path and filename pointing to a sequence file
 ### Output
 List of pairs, where each pair consists of a label and the corresponding sequence
 
-## `P2.py` 
+## `P2.py`
 **Prototype:**  
 dict(tuple(int, int) -> tuple(string, string))  
 **AlignByDP**(list(tuple(string, string)))
@@ -42,7 +45,7 @@ an exception with the message “malformed input”.
 A symmetrical matrix with zeroes in the diagonal. Each entry i,j corresponds to the
 evolutionary distance between sequences i and j.
 
-## `P4.py` 
+## `P4.py`
 **Prototype:**  
 string  
 **Cluster**(list(list(float)), list)

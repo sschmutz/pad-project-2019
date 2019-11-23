@@ -2,13 +2,6 @@ language: python
 python:
   - "3.6"
 before_install:
-  - python --version
-  - pip install -U pip
-  - pip install -U pytest
-  - pip install codecov
-env:
-  - CODECOV_TOKEN="3ee2a4d3-fed0-46d0-9a95-7bb52f768f0c"
+  - pip install pytest
 script:
   - pytest
-after_success:
-  - codecov

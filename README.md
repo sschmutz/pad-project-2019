@@ -1,5 +1,4 @@
 [![Build Status](https://travis-ci.com/sschmutz/pad-project-2019.svg?token=7qkqv7jypCCWxniT4rin&branch=master)](https://travis-ci.com/sschmutz/pad-project-2019)
-[![codecov](https://codecov.io/gh/sschmutz/pad-project-2019/branch/master/graph/badge.svg?token=dEYcxfaoRY)](https://codecov.io/gh/sschmutz/pad-project-2019)
 
 # pad-project-2019
 >reads genomics sequences from a file and clusters them in a tree according

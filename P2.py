@@ -52,6 +52,8 @@ def ValidSequences(sequences):
             return False
 
         for element in entry:
+            if len(element) == 0:
+                return False
             if type(element) is not str:
                 return False
 

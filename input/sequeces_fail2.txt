@@ -1,0 +1,2 @@
+# label consists of more than one word
+>Gorilla Gorilla   ACCCCATTTA TCCATAAAAA CCAAC ACCAA CCCCC ATCTA ACACACAAAC TAATGACCCC

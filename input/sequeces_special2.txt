@@ -1,0 +1,3 @@
+# one sequence missing
+>Gorilla   
+>Gorilla   ACCCCATTA TCCATAAAAA CCAAC ACCAA CCCCC ATCTA ACACACAAAC TAATGACCCC

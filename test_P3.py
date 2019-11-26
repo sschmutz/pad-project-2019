@@ -1,4 +1,5 @@
 import P3
+import pytest
 
 def test_ComputeDistMatrix():
     P2_output = {(0, 1): ('ACCAAACATCCAAACA-CCAAC-CCCAGCC-CTTACGCAATC-ATACAAAGAATATT', 'ACCAAACCTGTCCCCATCTAACACCAACCCACATATACAAGCTAAACCAAAAATACC'),
@@ -32,3 +33,52 @@ def test_ComputeDistMatrix():
                           [0.31925086156926286, 0.30409883108112323, 0.31811793084023765, 0.2326161962278796, 0.2326161962278796, 0.14836930749743993, 0.0]]
 
     assert P3_output == P3_output_expected
+
+def test_Example():
+    P2_output = {(0, 1): ('TCC---G', 'TGCTACG')}
+    P3_output = P3.ComputeDistMatrix(P2_output)
+    P3_output_expected = [[0.0, 0.30409883108112323],
+                          [0.30409883108112323, 0.0]]
+
+    assert P3_output == P3_output_expected
+
+def test_Fails():
+    # input not a dict
+    with pytest.raises(Exception, match="malformed input"):
+        P3.ComputeDistMatrix("")
+
+    # input is a dict with length 0
+    with pytest.raises(Exception, match="malformed input"):
+        P3.ComputeDistMatrix({})
+
+    # input is a dict with not tuple
+    with pytest.raises(Exception, match="malformed input"):
+        P3.ComputeDistMatrix({"": ""})
+
+    # input is a dict tuples with key of length other than 2
+    with pytest.raises(Exception, match="malformed input"):
+        P3.ComputeDistMatrix({(0, 1, 1): ("AT", "AT")})
+
+    # input is a dict tuples with key not integer
+    with pytest.raises(Exception, match="malformed input"):
+        P3.ComputeDistMatrix({(0, "1",): ("AT", "AT")})
+
+    # input is a dict tuples with value of length other than 2
+    with pytest.raises(Exception, match="malformed input"):
+        P3.ComputeDistMatrix({(0, 1): ("AT", "AT", "AT")})
+
+    # input is a dict tuples with sequences of different length
+    with pytest.raises(Exception, match="malformed input"):
+        P3.ComputeDistMatrix({(0, 1): ("AT", "ATG")})
+
+    # input is a dict tuples with value not string
+    with pytest.raises(Exception, match="malformed input"):
+        P3.ComputeDistMatrix({(0, 1,): (["AT"], "AT")})
+
+    # at least one sequence has length of 0
+    with pytest.raises(Exception, match="malformed input"):
+        P3.ComputeDistMatrix({(0, 1):("A", "")})
+
+    # at least one sequence contains invalid nucleotide
+    with pytest.raises(Exception, match="malformed input"):
+        P3.ComputeDistMatrix({(0, 1):("ATg", "ATG")})

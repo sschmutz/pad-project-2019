@@ -35,6 +35,9 @@ def ValidAlignment(aligned_sequences):
     if type(aligned_sequences) is not dict:
         return False
 
+    if len(aligned_sequences) == 0:
+        return False
+
     for entry_pair in aligned_sequences:
         if type(entry_pair) is not tuple:
             return False
@@ -55,6 +58,8 @@ def ValidAlignment(aligned_sequences):
 
         for sequence in sequence_pair:
             if type(sequence) is not str:
+                return False
+            if len(sequence) == 0:
                 return False
 
             for nucleotide in sequence:

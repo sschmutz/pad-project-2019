@@ -13,3 +13,16 @@ def test_Cluster():
     P4_output_expected = '((Bovine, Gibbon), ((((Chimp, Human), Gorilla), Orangutan), Mouse))'
 
     assert P4_output == P4_output_expected
+
+def test_Example():
+    wikipedia_example = [[0.0, 17.0, 21.0, 31.0, 23.0],
+                         [17.0, 0.0, 30.0, 34.0, 21.0],
+                         [21.0, 30.0, 0.0, 28.0, 39.0],
+                         [31.0, 34.0, 28.0, 0.0, 43.0],
+                         [23.0, 21.0, 39.0, 43.0, 0.0]]
+
+    wikipedia_example_labels = ["a", "b", "c", "d", "e"]
+    P4_output = P4.Cluster(wikipedia_example, wikipedia_example_labels)
+    P4_output_expected = '((c, d), ((a, b), e))'
+
+    assert P4_output == P4_output_expected

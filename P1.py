@@ -47,7 +47,7 @@ def ValidSeq(line):
             # Extract everything after the label which is the nucleotide sequence
             nucleotides_raw = line[1:].split(maxsplit=1)[1].upper()
             nucleotides = "".join(nucleotides_raw.split())
-        except ValueError:
+        except:
             return None
 
         valid_nucleotides = "ATGC"
@@ -61,6 +61,6 @@ def ValidSeq(line):
 
 
 if __name__ == "__main__":
-    path_filename = "./input/sequeces_example.txt"
+    path_filename = "./input/sequences_example.txt"
 
     print(ParseSeqFile(path_filename))

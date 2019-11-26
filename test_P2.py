@@ -1,4 +1,5 @@
 import P2
+import pytest
 
 def test_AlignByDP():
     P1_output = [('Mouse', 'ACCAAACATCCAAACACCAACCCCAGCCCTTACGCAATCATACAAAGAATATT'),
@@ -48,3 +49,40 @@ def test_InDel():
                           (2, 3): ('CCAAA', '--ACC')}
 
     assert P2_output == P2_output_expected
+
+def test_Fails():
+    # input not a list
+    with pytest.raises(Exception, match="malformed input"):
+        P2.AlignByDP("")
+
+    # list with length 0
+    with pytest.raises(Exception, match="malformed input"):
+        P2.AlignByDP([])
+
+    # list with string not tuple
+    with pytest.raises(Exception, match="malformed input"):
+        P2.AlignByDP([""])
+
+    # list with emty tuple
+    with pytest.raises(Exception, match="malformed input"):
+        P2.AlignByDP([()])
+
+    # list with tuple of length != 2
+    with pytest.raises(Exception, match="malformed input"):
+        P2.AlignByDP([("Human", "ATG", "ATG"), ("Human", "ATG")])
+
+    # label has length 0
+    with pytest.raises(Exception, match="malformed input"):
+        P2.AlignByDP([("", "ATG"), ("Human", "ATG")])
+
+    # sequence has length 0
+    with pytest.raises(Exception, match="malformed input"):
+        P2.AlignByDP([("Human", ""), ("Human", "ATG")])
+
+    # only one sequence
+    with pytest.raises(Exception, match="malformed input"):
+        P2.AlignByDP([("Human", "ATG")])
+
+    # not a valid nucleotide
+    with pytest.raises(Exception, match="malformed input"):
+        P2.AlignByDP([("Human", "ATG"), ("Human", "ATg")])

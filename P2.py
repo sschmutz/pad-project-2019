@@ -127,7 +127,7 @@ def AlignSequences(seq1, seq2):
     seq1_aligned = []
     seq2_aligned = []
 
-    while last_position["row"] > 0 and last_position["column"] > 0:
+    while last_position["row"] > 0 or last_position["column"] > 0:
         row = last_position["row"]
         column = last_position["column"]
 

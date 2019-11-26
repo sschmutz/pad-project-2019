@@ -37,10 +37,14 @@ def test_AlignByDP():
 def test_InDel():
     P1_output = [('1', 'ACCAAA'),
                  ('2', 'ACCAA'),
-                 ('3', 'CCAAA')]
+                 ('3', 'CCAAA'),
+                 ('4', 'ACC')]
     P2_output = P2.AlignByDP(P1_output)
     P2_output_expected = {(0, 1): ('ACCAAA', 'ACC-AA'),
                           (0, 2): ('ACCAAA', '-CCAAA'),
-                          (1, 2): ('ACCAA', 'CCAAA')}
+                          (0, 3): ('ACCAAA', 'ACC---'),
+                          (1, 2): ('ACCAA', 'CCAAA'),
+                          (1, 3): ('ACCAA', 'ACC--'),
+                          (2, 3): ('CCAAA', '--ACC')}
 
     assert P2_output == P2_output_expected

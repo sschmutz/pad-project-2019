@@ -156,12 +156,4 @@ if __name__ == "__main__":
 
     P3_output_labels = ["Mouse", "Bovine", "Gibbon", "Orangutan", "Gorilla", "Chimp", "Human"]
 
-    wikipedia_example = [[0.0, 17.0, 21.0, 31.0, 23.0],
-                         [17.0, 0.0, 30.0, 34.0, 21.0],
-                         [21.0, 30.0, 0.0, 28.0, 39.0],
-                         [31.0, 34.0, 28.0, 0.0, 43.0],
-                         [23.0, 21.0, 39.0, 43.0, 0.0]]
-
-    wikipedia_example_labels = ["a", "b", "c", "d", "e"]
-
     print(Cluster(P3_output, P3_output_labels))

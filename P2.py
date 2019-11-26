@@ -30,7 +30,7 @@ def ValidSequences(sequences):
     """Reads list of sequence pairs (label, sequence), returns True if valid
     and False otherwise.
 
-    Sequences should be type list, with length larger than 0,
+    Sequences should be type list, with length larger than 1,
     contain tuples with length 2 of which both are type string.
 
     While the first element represents the label the second element should be
@@ -42,7 +42,7 @@ def ValidSequences(sequences):
     if type(sequences) is not list:
         return False
 
-    if len(sequences) == 0:
+    if len(sequences) < 2:
         return False
 
     for entry in sequences:

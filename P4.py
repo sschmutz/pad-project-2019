@@ -20,7 +20,7 @@ def Cluster(distance_matrix, labels):
 
     # to end up with a properly formatted tree,
     # the list of the closest pair needs to be reformatted
-    tree = "(%s, %s)" % (closest_pair[0], closest_pair[1])
+    tree = "(%s,%s)" % (closest_pair[0], closest_pair[1])
 
     return tree
 
@@ -125,7 +125,7 @@ def DistanceDictUpdate(distance_dict, closest_pair):
     closest1 = closest_pair[0]
     closest2 = closest_pair[1]
 
-    closest_pair_label = "(%s, %s)" % (closest_pair[0], closest_pair[1])
+    closest_pair_label = "(%s,%s)" % (closest_pair[0], closest_pair[1])
 
     distance_dict_update = defaultdict(dict)
     distance_dict_update[closest_pair_label][closest_pair_label] = 0.

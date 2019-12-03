@@ -10,7 +10,7 @@ def test_Cluster():
                  [0.31925086156926286, 0.30409883108112323, 0.31811793084023765, 0.2326161962278796, 0.2326161962278796, 0.14836930749743993, 0.0]]
     P3_output_labels = ["Mouse", "Bovine", "Gibbon", "Orangutan", "Gorilla", "Chimp", "Human"]
     P4_output = P4.Cluster(P3_output, P3_output_labels)
-    P4_output_expected = '((Bovine, Gibbon), ((((Chimp, Human), Gorilla), Orangutan), Mouse))'
+    P4_output_expected = '((Bovine,Gibbon),((((Chimp,Human),Gorilla),Orangutan),Mouse))'
 
     assert P4_output == P4_output_expected
 
@@ -23,6 +23,6 @@ def test_Example():
 
     wikipedia_example_labels = ["a", "b", "c", "d", "e"]
     P4_output = P4.Cluster(wikipedia_example, wikipedia_example_labels)
-    P4_output_expected = '((c, d), ((a, b), e))'
+    P4_output_expected = '((c,d),((a,b),e))'
 
     assert P4_output == P4_output_expected

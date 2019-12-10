@@ -37,7 +37,7 @@ def ValidSequences(sequences):
     a nucleotide sequence only containing uppercase A, T, G or C.
     """
 
-    valid_nucleotides = "ATGC"
+    valid_nucleotides = ["A", "T", "G", "C"]
 
     if type(sequences) is not list:
         return False

@@ -50,7 +50,7 @@ def ValidSeq(line):
         except:
             return None
 
-        valid_nucleotides = "ATGC"
+        valid_nucleotides = ["A", "T", "G", "C"]
 
         for nucleotide in nucleotides:
             if nucleotide not in valid_nucleotides:

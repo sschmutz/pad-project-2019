@@ -30,7 +30,7 @@ def ValidAlignment(aligned_sequences):
     only containing uppercase A, T, G, C or -.
     """
 
-    valid_nucleotides = "ATGC-"
+    valid_nucleotides = ["A", "T", "G", "C", "-"]
 
     if type(aligned_sequences) is not dict:
         return False

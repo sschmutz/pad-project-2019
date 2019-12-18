@@ -33,7 +33,7 @@ def ValidSequences(sequences):
     Sequences should be type list, with length larger than 1,
     contain tuples with length 2 of which both are type string.
 
-    While the first element represents the label the second element should be
+    While the first element represents the label, the second element should be
     a nucleotide sequence only containing uppercase A, T, G or C.
     """
 
@@ -126,7 +126,7 @@ def AlignSequences(seq1, seq2):
                     optimal_paths.append(path)
 
     # traceback following the optimal paths results in the aligned sequences
-    # if there are multiple equally optimal paths, one is chosen arbitrarily as follows:
+    # if there are multiple equally optimal paths, one is chosen as follows:
     # upper left > above > left
     last_position = {"row":rows-1, "column":columns-1}
     seq1_aligned = []
@@ -162,6 +162,7 @@ def AlignSequences(seq1, seq2):
     seq2_aligned = "".join(seq2_aligned)
 
     return (seq1_aligned, seq2_aligned)
+
 
 
 if __name__ == "__main__":

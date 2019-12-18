@@ -42,12 +42,12 @@ def ValidSeq(line):
     if line[0] == ">":
 
         try:
-            # Per definition, the first element after the ">" sign is the label
+            # per definition, the first element after the ">" sign is the label
             label = line[1:].split()[0]
 
-            # Extract everything after the label which is the nucleotide sequence
+            # extract everything after the label which is the nucleotide sequence
             nucleotides_raw = line[1:].split(maxsplit=1)[1].upper()
-            # Remove all whitespace characters within the nucleotide sequence
+            # remove all whitespace characters within the nucleotide sequence
             nucleotides = "".join(nucleotides_raw.split())
         except:
             return None

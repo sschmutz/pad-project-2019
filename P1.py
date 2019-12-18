@@ -2,12 +2,13 @@
 
 
 
-def ParseSeqFile(path_filename):
+def ParseSeqFile(filepath):
     """Takes a filepath as string, parses the containing sequences
-    and returns a list of tuple pairs as string (label, sequence).
+    and returns a list of tuples which contain pairs of (label, sequence)
+    as strings.
     """
 
-    seq_file = open(path_filename, "r")
+    seq_file = open(filepath, "r")
     seq_pairs = []
 
     for line in seq_file:
@@ -18,16 +19,16 @@ def ParseSeqFile(path_filename):
 
     seq_file.close()
 
-    if len(seq_pairs) > 0:
-        return seq_pairs
-    else:
+    if not seq_pairs:
         raise Exception("malformed input")
+
+    return seq_pairs
 
 
 
 def ValidSeq(line):
     """Reads line from a Sequence File and returns matching label and sequence
-    as string in a tuple.
+    as strings in a tuple.
 
     Checks format of line from sequence file, strips all whitespace characters
     and only returns the label and nucleotide sequence if formatted properly:
@@ -46,6 +47,7 @@ def ValidSeq(line):
 
             # Extract everything after the label which is the nucleotide sequence
             nucleotides_raw = line[1:].split(maxsplit=1)[1].upper()
+            # Remove all whitespace characters within the nucleotide sequence
             nucleotides = "".join(nucleotides_raw.split())
         except:
             return None
@@ -61,6 +63,6 @@ def ValidSeq(line):
 
 
 if __name__ == "__main__":
-    path_filename = "./input/sequences_example.txt"
+    filepath = "./input/sequences_example.txt"
 
-    print(ParseSeqFile(path_filename))
+    print(ParseSeqFile(filepath))

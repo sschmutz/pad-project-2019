@@ -102,15 +102,16 @@ def PairwiseDistance(aligned_sequences, matrix):
             entry1_nucleotide = aligned_sequences[pair][0][nucleotide]
             entry2_nucleotide = aligned_sequences[pair][1][nucleotide]
 
-            # for he p_dist computation all gap positions are excluded and only
+            # for the p_dist computation all gap positions are excluded and only
             # nucleotide differences are considered
             if entry1_nucleotide == "-" or entry2_nucleotide == "-":
                 continue
-            if entry1_nucleotide != entry2_nucleotide:
+            elif entry1_nucleotide != entry2_nucleotide:
                 nucleotide_difference += 1
                 nucleotide_compared += 1
-            if entry1_nucleotide == entry2_nucleotide:
+            else:
                 nucleotide_compared += 1
+
 
         p_dist = nucleotide_difference/nucleotide_compared
         d_dist = -3/4*log(1-p_dist*4/3)
@@ -119,6 +120,7 @@ def PairwiseDistance(aligned_sequences, matrix):
         matrix[pair[1]][pair[0]] = d_dist
 
     return matrix
+
 
 
 if __name__ == "__main__":

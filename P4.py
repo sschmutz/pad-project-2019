@@ -125,17 +125,17 @@ def DistanceDictUpdate(distance_dict, closest_pair):
     closest1 = closest_pair[0]
     closest2 = closest_pair[1]
 
-    closest_pair_label = "(%s,%s)" % (closest_pair[0], closest_pair[1])
+    closest_pair_label = "(%s,%s)" % (closest1, closest2)
 
     distance_dict_update = defaultdict(dict)
     distance_dict_update[closest_pair_label][closest_pair_label] = 0.
 
     for label1 in distance_dict:
         if label1 not in closest_pair:
-            ave_dist = (distance_dict[label1][closest1]+distance_dict[label1][closest2])/2
+            avg_dist = (distance_dict[label1][closest1]+distance_dict[label1][closest2])/2
 
-            distance_dict_update[closest_pair_label][label1] = ave_dist
-            distance_dict_update[label1][closest_pair_label] = ave_dist
+            distance_dict_update[closest_pair_label][label1] = avg_dist
+            distance_dict_update[label1][closest_pair_label] = avg_dist
 
             for label2 in distance_dict[label1]:
                 if label2 not in closest_pair:
